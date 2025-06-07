@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cartilha Meio Ambiente</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.1.0/docx.min.js"></script>
+    <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+    <title>Bictmar</title>
     <link rel="stylesheet" href="">
     <style type="text/css">
 
@@ -60,52 +62,101 @@ img{
 
     </style>
 </head>
-<body>
+<body id="exportContent">
 
     <header>
-        <h1>Cartilha vegetado submerso <br> e Meio Ambiente</h1>
+        <h1>\Repositório de trabalhos e atividades do Bictmar<br>  </h1>
         <img src="https://imgs.search.brave.com/o90h0jyMOPMs-x7_c_oK7KyxYpJukW-IyAZrOx1fgK4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/cG5nYWxsLmNvbS93/cC1jb250ZW50L3Vw/bG9hZHMvMTkvU3Vw/ZXItTWFyaW8tQ2hh/cmFjdGVycy1GdW4t/Q2FydG9vbmlzaC1H/YW1lLUNoYXJhY3Rl/ci1QTkctdGh1bWIu/cG5n" alt="Imagem da Página 2"> 
 
-        <h1>Em produção, aguardem! </h1>
+        <h1> Seja bem vindo! </h1>
        
             </header>
 
     <section class="page">
-        <h2>Página 1 - Introdução</h2>
-        <p class="animated-text">Introdução
-Os fundos vegetados marinhos são ecossistemas essenciais para a saúde dos oceanos e do planeta como um todo. Esta cartilha tem como objetivo conscientizar sobre a importância desses ambientes, suas funções ecológicas e a necessidade de sua preservação, seguindo o modelo de materiais educativos ambientais .</p>
-       <img src="https://www.pngall.com/super-mario-characters-png/" alt="Imagem da Página 2">  </section>
+        <h2>Pasta de Prejetos</h2>
+        <p class="animated-text">ECOLET um projeto de extensão Bictmar </p>
+        <button class="box" onclick="Export2Word('exportContent')">Acessar projeto de extensão </button>
+       <img src="" alt="Imagem da Página 2">  </section>
 
     <section class="page">
-        <h2>Página 2 - Problemas Ambientais</h2>
-        <div class="box">Desmatamento, poluição e desperdício são desafios globais.</div>
+        <h2>Cartilha sobre fundo vegetado - Problemas Ambientais</h2>
+        <div class="box">Trabalho grupo 10, 2025 </div>
         <img src="images/pagina2.png" alt="Imagem da Página 2">
     </section>
 
-    <section class="page">
-        <h2>Página 3 - Sustentabilidade</h2>
-        <p class="animated-text">Pequenas ações podem gerar grandes mudanças.</p>
-        <img src="images/pagina3.png" alt="Imagem da Página 3">
-    </section>
+  
 
-    <section class="page">
-        <h2>Página 4 - Reciclagem</h2>
-        <div class="box">Separar e reutilizar materiais reduz impactos ambientais.</div>
-        <img src="images/pagina4.png" alt="Imagem da Página 4">
-    </section>
+    
+    <!--
 
-    <section class="page">
-        <h2>Página 5 - Energias Renováveis</h2>
-        <p class="animated-text">Fontes limpas como solar e eólica ajudam a preservar recursos.</p>
-        <img src="images/pagina5.png" alt="Imagem da Página 5">
-    </section>
+    <h2>Baixar Arquivo ou Página</h2>
+    <input type="text" id="urlInput" placeholder="Insira a URL do arquivo">
+    <button onclick="baixarArquivo()">Baixar</button>
 
-    <section class="page">
-        <h2>Página 6 - Conclusão</h2>
-        <div class="box">Todos podem contribuir para um futuro sustentável.</div>
-        <img src="images/pagina6.png" alt="Imagem da Página 6">
-    </section>
+    <script>
+        async function baixarArquivo() {
+            const url = document.getElementById("urlInput").value;
+            if (!url) {
+                alert("Por favor, insira uma URL válida!");
+                return;
+            }
 
-    <script src="script.js"></script>
+            try {
+                const resposta = await fetch(url);
+                const blob = await resposta.blob();
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = url.split("/").pop(); // Nome do arquivo baseado na URL
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } catch (erro) {
+                alert("Erro ao baixar o arquivo: " + erro);
+            }
+        }
+    </script> -->
+
+    <button class="box" onclick="Export2Word('exportContent')">Baixar</button>
+
+    <script> 
+
+    function Export2Word(element, filename = ''){
+    var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
+    var postHtml = "</body></html>";
+    var html = preHtml+document.getElementById(element).innerHTML+postHtml;
+
+    var blob = new Blob(['\ufeff', html], {
+        type: 'application/msword'
+    });
+    
+    // Specify link url
+    var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
+    
+    // Specify file name
+    filename = filename?filename+'.doc':'document.doc';
+    
+    // Create download link element
+    var downloadLink = document.createElement("a");
+
+    document.body.appendChild(downloadLink);
+    
+    if(navigator.msSaveOrOpenBlob ){
+        navigator.msSaveOrOpenBlob(blob, filename);
+    }else{
+        // Create a link to the file
+        downloadLink.href = url;
+        
+        // Setting the file name
+        downloadLink.download = filename;
+        
+        //triggering the function
+        downloadLink.click();
+    }
+    
+    document.body.removeChild(downloadLink);
+}
+
+    </script> 
+
 </body>
 </html>
