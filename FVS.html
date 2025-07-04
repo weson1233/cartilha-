@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecossistemas Marinhos</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+        /* RESET E ESTILOS GERAIS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        h2 {
+            font-weight: bold;
+        }
+
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            overflow-x: hidden;
+            width: 70%;
+        }
+
+        /* ESTRUTURA PRINCIPAL */
+        .container {
+            display: flex;
+            min-height: 150vh;
+            position: relative;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            transition: transform 0.5s ease;
+        }
+
+        .glossary {
+            width: 300px;
+            background: linear-gradient(135deg, #1e90ff, #00bfff);
+            padding: 1.5rem;
+            color: white;
+            border-radius: 20px 0 0 20px;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            right: -300px;
+            top: 0;
+            bottom: 0;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .glossary.active {
+            right: 0;
+        }
+
+        /* ESTILOS DAS PÁGINAS */
+        .page {
+            min-height: calc(100vh - 4rem);
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(90deg, #1e90ff, #00bfff, #87cefa);
+        }
+
+        /* PÁGINA INICIAL */
+        #page1 {
+            background: linear-gradient(135deg, rgba(30, 144, 255, 0.1), rgba(0, 191, 255, 0.1)), url('https://img.freepik.com/fotos-premium/fondo-agua_941097-88714.jpg') no-repeat center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .title-container {
+            max-width: 600px;
+            padding: 2rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* CAIXAS DE CURIOSIDADES */
+        .curiosity-box {
+            background: white;
+            border-radius: 50%;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1.5rem;
+            margin: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .curiosity-box:hover {
+            transform: scale(1.05);
+        }
+
+        .curiosity-box::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* SLIDES */
+        .slides-container {
+            margin: 2rem 0;
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+            border-radius: 20px;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide-content {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 1rem;
+            width: 100%;
+        }
+
+        .slide-nav {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .slide-dot {
+            width: 12px;
+            height: 12px;
+            background-color: #ccc;
+            border-radius: 50%;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .slide-dot.active {
+            background-color: #1e90ff;
+        }
+
+        /* GLOSSÁRIO */
+        .term {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* NAVEGAÇÃO */
+        .nav-buttons {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            z-index: 90;
+        }
+
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e90ff, #00bfff);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* botão de download pdf */
+
+
+        .download-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        
+
+
+
+
+
+
+        /* FOOTER */
+        footer {
+            background: linear-gradient(135deg, #1e90ff, #00bfff);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        /* GRADIENTS PARA CADA PÁGINA */
+        #page2::before { background: linear-gradient(90deg, #20b2aa, #3cb371, #2e8b57); }
+        #page3::before { background: linear-gradient(90deg, #9370db, #ba55d3, #ff69b4); }
+        #page4::before { background: linear-gradient(90deg, #ffa500, #ff8c00, #ff6347); }
+        #page5::before { background: linear-gradient(90deg, #4682b4, #5f9ea0, #b0c4de); }
+        #page6::before { background: linear-gradient(90deg, #778899, #708090, #2f4f4f); }
+
+        /* ANIMAÇÕES */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+
+
+        
+            /* Catálogo com cards */
+
+            .pag {
+            display: none;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .pag.active {
+            display: block;
+        }
+
+
+            /* h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 2rem;
+            border-bottom: 3px solid var(--secondary);
+            padding-bottom: 10px;
+            display: inline-block;
+        }*/
+
+
+            .legend {
+            font-size: 0.8rem;
+            color: #888;
+            font-style: italic;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.03);
+            border-radius: 0 0 15px 15px;
+        }
+
+        .card-text {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-image {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .card:hover .card-image img {
+            transform: scale(1.05);
+        }
+
+
+        
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .card-text {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .scroll-section {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+            margin: 20px 0;
+        }
+
+        .scroll-section::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .scroll-section::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .scroll-section::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+
+        
+
+        
+
+    </style>
+</head>
+<body id="exportContent">
+    
+    <div class="container">
+        <div class="main-content" id="main-content">
+            <!-- PÁGINA 1 - INTRODUÇÃO -->
+            <section id="page1" class="page">
+                <div class="title-container">
+                    <h1 style="font-size: 3rem; color: #11B20C; margin-bottom: 1rem; font-weight: bold;">Ecossistemas marinhos</h1>
+
+                    <h2 style="font-size: 33px; color: #1e90ff; margin-bottom: 1rem;"> e os fundos vegetados submersos</h2>
+                    <p style="font-size: 1.2rem; line-height: 1.6;">Descubra a fascinante biodiversidade no mundo dos oceanos e muito mais!</p>
+                    <img style="border-radius: 50%; width: 90px;"  src="https://4.bp.blogspot.com/-CTdr1YXjh8I/UAiwsy_ewuI/AAAAAAAAAEA/_rcyujahj60/s1600/nautilus.png">
+                    <button id="glossary-btn" style="margin-top: 1rem; padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #1e90ff, #00bfff); color: white; border: none; border-radius: 30px; cursor: pointer; font-weight: bold;">Glossário</button>
+
+                </div>
+            </section>
+
+
+
+
+
+            <!-- Página 1: Introdução -->
+    <section>
+
+
+
+
+        <div id="pag1" class="pag active">
+            <h2 style="font-size: 33px; font-weight: bold; color:red">Introdução</h2>
+            
+            <div class="scroll-section" style="color: #00B88B;">
+                <p>Os fundos vegetados submerso
+compreendem uma parte fundamental dos
+ecossistemas submersos que são essenciais
+para a vida, visto seu potencial para a
+regulação dos ambientes aquáticos.</p>
+                
+                <p style="padding: 25px"> os
+fundos vegetados são compostos de
+espécies vegetais aquáticas como pradarias e algumas 
+algas. Assim abrigando grande parte da
+biodiversidade marinha, esses ecossistemas
+se distribuem ao longo do litoral brasileiro de maneira distintas e conforme as
+condições de clima e ambiente.</p>
+                
+                
+                <ul>
+                    <li>Consulte o glossário para entender termos técnicos</li>
+                   
+                </ul>
+            </div>
+
+            <div class="catalog">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="https://www.ecured.cu/images/1/1b/Macroalgas_plantas.jpg">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">O que são os fundos vegetados
+submersos?
+</h3>
+                        <p class="card-text">Os fundos vegetados submersos, também chamados de gramas marinhas, são jardins subaquáticos formados por angiospermas adaptadas à vida no mar. Esses ecossistemas são altamente produtivos, abrigam uma rica biodiversidade, fornecem alimento e abrigo para diversas espécies, além de purificar a água e proteger a linha de costa.</p>
+                        <p class="legend">Figura 1: Sala de aula digital</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div style="height: 60%; padding: 20px;" class="card-image">
+                        <img src="https://th.bing.com/th/id/OIP.S4EQUmuG_Dwsx9UCS3R5xAHaDG?w=331&h=146&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" alt="Grupo diversificado de estudantes colaborando em projeto educacional com tablets" />
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">características abióticas</h3>
+                        <p class="card-text">Ou seja, fatores não vivos do ambiente, que influenciam a vida das espécies:
+Luz solar 
+Temperatura da água 
+Salinidade 
+Tipo de sedimento (areia, lama, lodo) 🪱
+Profundidade 
+Correnteza </p>
+                        <p class="legend">Figura 2: Trabalho colaborativo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <div style="border-radius:15px" class="parallax-video-container">
+        <style type="text/css">
+            * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            /*overflow-x: hidden;*/
+        }
+
+        .parallax-video-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .parallax-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        .content-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.4);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            z-index: 2;
+        }
+
+        .content-overlay h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .content-overlay p {
+            font-size: 1.2rem;
+            max-width: 800px;
+        }
+
+        .main-content {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Simple parallax effect on scroll */
+        @media (prefers-reduced-motion: no-preference) {
+            .parallax-video-container {
+                perspective: 1px;
+                transform-style: preserve-3d;
+            }
+            
+            .parallax-video {
+                transform: translateZ(-1px) scale(2);
+            }
+        }
+
+        /* Fallback for browsers with prefers-reduced-motion */
+        @media (prefers-reduced-motion: reduce) {
+            .parallax-video {
+                transform: none !important;
+            }
+        }
+        </style>
+        <script>
+        // Enhance parallax effect with scroll event
+        document.addEventListener('DOMContentLoaded', function() {
+            const parallaxContainer = document.querySelector('.parallax-video-container');
+            const video = document.querySelector('.parallax-video');
+
+            // Only apply JS parallax effect if CSS parallax isn't already handling it
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            if (!prefersReducedMotion && !getComputedStyle(parallaxContainer).perspective) {
+                window.addEventListener('scroll', function() {
+                    const scrollPosition = window.scrollY;
+                    const containerHeight = parallaxContainer.offsetHeight;
+                    
+                    // Calculate scroll percentage (0 to 1)
+                    const scrollPercentage = Math.min(scrollPosition / containerHeight, 1);
+                    
+                    // Apply parallax effect - video moves slower than content
+                    video.style.transform = `translateY(${scrollPosition * 0.5}px)`;
+                });
+            }
+        });
+    </script>
+        <video  class="parallax-video" autoplay muted loop playsinline>
+            <source src="lula.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+        <div class="content-overlay">
+            <h1>Serviços ecossistemicos </h1>
+            <p>Não sei o que devemos por aqui </p>
+        </div>
+    </div>
+
+    
+
+
+
+
+
+
+            <!-- PÁGINA 2 - CURIOSIDADES -->
+            <section id="page2" class="page">
+                <h2 style="color: #20b2aa; margin-bottom: 2rem;">Curiosidades Marinhas</h2>
+                
+                <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+                    <div class="curiosity-box floating" data-label="Importancia">
+                        As florestas submersas são 70% da biodiversidade marinha, podendo fornecer parte do oxigenio do planeta!
+                    </div>
+                    <div class="curiosity-box floating" data-label="Luz nas profundezas">
+                        90% das profundezas produzem .
+                    </div>
+                    <div class="curiosity-box floating" data-label="Corais viventes">
+                        Os recifes de coral ocupam menos de 1% do fundo do mar, mas abrigam 25% de todas as espécies marinhas.
+                    </div>
+                </div>
+
+                <div style="margin-top: 3rem;">
+
+                    <div class="container" >
+                        <div class="slide-content" style="border-radius: 15px; background: linear-gradient(135deg, #C7C2C4, rgba(0, 191, 255, 0.7)) ">
+                    
+
+            <img  src="lula.gif" alt="Computer man" style=" width:100%;height:300px; border-radius: 15px;">
+            
+        
+                   <p style="padding-top: 30px; font-size: 25px;  text-align: center; font-style: italic; color: #white ;">Os fundos vegetados são os "jardins" do oceano, abrigando incrível biodiversidade.</p> 
+
+                   <p style="padding: 20px; font-size: 20px; "> Faltando um texto aqui</p>
+                   <p>A despeito de sua importância ecológica e econômica, os fundos vegetados submersos têm desaparecido rapidamente da maioria das regiões costeiras do globo. Cerca de 30% das pradarias de gramas marinhas desapareceram desde o final do século XIX. 
+Degradações de ambientes estuarinos têm sido registradas em regiões dos EUA e Europa com valores de até 100% de perda dos habitats de VAS no entorno de grandes centros. As taxas de perdas, entre 2 a 5% ao ano, aumentaram significativamente a partir da segunda metade do século XX, devido à rápida ocupação e degradação dos ambientes costeiros, posicionando as pradarias submersas dentre os habitats mais ameaçados do mundo.</p>
+
+<p style="padding-top:22px;">
+ Além de altamente vulneráveis a impactos antropogênicos diversos, pradarias de gramas marinhas e VAS são afetadas por variabilidade climática/hidrológica como vazão de rios, variações de temperatura, salinidade, tempestades e clima de ondas. Várias espécies de angiospermas marinhas são consideradas sentinelas costeiras (coastal canaries), já que respondem rapidamente às mudanças na qualidade da água. Dessa maneira, as pradarias são também altamente vulneráveis às mudanças climáticas globais (MCG) observadas e previstas, como aumento da temperatura superficial do mar, elevação do nível médio do mar e acidificação dos oceanos, que afetam potencialmente a fisiologia das plantas. </p>
+
+<p>
+O estado atual de degradação dos ambientes costeiros, as perdas dos habitats de FVS, a ausência de dados temporais e espaciais na maioria das regiões costeiras e a alta vulnerabilidade das pradarias aos impactos antropogênicos diversos e às mudanças climáticas globais, têm incentivado a criação de programas de monitoramento (Seagrass Net, Short et al., 2006; Seagrass Watch, McKenzie et al., 2003) e de recuperação (Shafer & Bergstrom, 2010) dos habitats costeiros vegetados em diversas partes do mundo, além de painéis de discussão focados em ações e políticas de conservação
+</p>
+
+                    
+                </div>
+                </div>
+                </div>
+            </section>
+
+
+
+
+
+
+
+            <!--animate pages -->
+
+            <style type="text/css">
+                
+
+                 @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Fredoka+One&display=swap');
+        
+        :root {
+            --wave-blue: #1a8cff;
+            --sand-yellow: #ffde7d;
+            --coral-pink: #ff7d7d;
+            --seaweed-green: #2d936c;
+            --deep-blue: #0a2342;
+        }
+        
+        body {
+            font-family: 'Comic Neue', cursive;
+            background-color: #e6f7ff;
+            margin: 0;
+            padding: 20px;
+            color: var(--deep-blue);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(26, 140, 255, 0.1) 0%, rgba(26, 140, 255, 0) 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 222, 125, 0.1) 0%, rgba(255, 222, 125, 0) 20%);
+        }
+        
+        .booklet {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            border: 5px solid var(--wave-blue);
+            position: relative;
+        }
+        
+        .booklet::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 15px;
+            background: linear-gradient(90deg, var(--wave-blue), var(--coral-pink), var(--sand-yellow), var(--seaweed-green), var(--wave-blue));
+            background-size: 300% 100%;
+            animation: rainbow 8s linear infinite;
+        }
+        
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        
+        .header {
+            text-align: center;
+            padding: 30px 20px 20px;
+            background: linear-gradient(to bottom, var(--wave-blue), #64c1ff);
+            color: white;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.8rem;
+            margin: 0;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+            letter-spacing: 1px;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            margin: 10px 0 0;
+        }
+        
+        .mascot {
+            position: absolute;
+            width: 100px;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+        
+        .content {
+            padding: 60px 30px 30px;
+        }
+        
+        .intro {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            background-color: #f8faff;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid var(--wave-blue);
+        }
+        
+        h2 {
+            font-family: 'Fredoka One', cursive;
+            color: var(--wave-blue);
+            font-size: 2rem;
+            margin-top: 40px;
+            border-bottom: 3px dashed var(--sand-yellow);
+            padding-bottom: 10px;
+        }
+        
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+            color: forestgreen;
+            font-weight: bold;
+
+        }
+        
+        .image-box {
+            background-color: blue;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            /*border: 4px solid var(--wave-blue);*/
+
+        }
+        
+        .image-box:hover {
+            transform: translateY(-5px) rotate(2deg);
+        }
+        
+        .image-box img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--wave-blue);
+        }
+        
+        .image-caption {
+            padding: 15px;
+            font-size: 0.9rem;
+            background-color: #f1f8ff;
+        }
+        
+        .image-caption h3 {
+            margin: 0 0 5px;
+            color: var(--deep-blue);
+        }
+        
+        
+        
+        .fact-box {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 5px solid var(--coral-pink);
+        }
+        
+        .button {
+            display: inline-block;
+            background-color: var(--wave-blue);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .button:hover {
+            background-color: var(--seaweed-green);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f1f8ff;
+            margin-top: 40px;
+            border-radius: 0 0 15px 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .image-gallery {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Animation for bubbles */
+        .bubble {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float-up 8s infinite ease-in;
+        }
+        
+        @keyframes float-up {
+            0% {
+                transform: translateY(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-500px);
+                opacity: 0;
+            }
+        }
+            </style>
+
+
+            <div class="content">
+            <div class="intro">
+                <p>Necessidade de sustentação mecânica em condição: A água do mar é densa o
+suficiente para dar suporte aos organismos, visto que em suas adaptações os
+organismos marinhos não possuem esqueletos rígidos, apêndices, ou extensos
+sistemas radiculares, Em vez disso, eles contam com flutuabilidade e fricção</p>
+            </div>
+            
+            <h2>Variedade de espécies e fisiologia</h2>
+            <div class="image-gallery">
+                
+                
+                <div class="image-box">
+                    <img src="https://th.bing.com/th/id/OIP.S4EQUmuG_Dwsx9UCS3R5xAHaDG?w=331&h=146&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" alt="Majestic humpback whale breaching ocean surface with water splashing dramatically">
+                    <div class="image-caption">
+                        <h3>Pradarias marinhas no sedimento costeiro</h3>
+                        <p></p>
+                    </div>
+                </div>
+
+                <div class="image-box">
+                    <img src="https://th.bing.com/th/id/OIP.S4EQUmuG_Dwsx9UCS3R5xAHaDG?w=331&h=146&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" alt="Majestic humpback whale breaching ocean surface with water splashing dramatically">
+                    <div class="image-caption">
+                        <h3>Pradarias marinhas no sedimento costeiro</h3>
+                        <p></p>
+                    </div>
+                </div>
+                
+                
+                </div>
+                
+               
+
+
+
+            <section style="padding: 30px;">
+                <style type="text/css">.curiosity-box {
+            background-color: #f0f9ff;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 3px dashed var(--wave-blue);
+            position: relative;
+        }
+        
+        .curiosity-box::before {
+            content: "⚡";
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            font-size: 2rem;
+            background-color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--sand-yellow);
+        }
+        
+        .curiosity-box h3 {
+            margin-top: 0;
+            color: var(--seaweed-green);
+        }</style>
+            <div class="curiosity-box" style="width: 89%; height: 300px;" >
+                
+                <img width="60px" src="https://bing.com/th/id/OIP.6XXYPVKNZklqi2zDow8QSQHaHa?w=163&h=180&c=7&r=0&o=5&cb=thvnextc2&pid=1.7">
+                <div class="fact-box" style="padding:33px">
+                    <p>Necessidade de sustentação mecânica: A água do mar é densa o suficiente para dar suporte aos organismos, visto que em suas adaptações os organismos marinhos não possuem esqueletos rígidos, apêndices, ou extensos sistemas radiculares, Em vez disso, eles contam com flutuabilidade e fricção</p>
+                </div>
+                
+            </div>
+        </section>
+            
+            <h2>Adaptações dos organismos ao ambiente marinho</h2>
+            <p></p>
+            
+            <div class="fact-box">
+               
+                <p>O ambiente marinho apresenta muitos desafios aos organismos porque a água do mar é densa o suficiente para dar suporte aos organismos Possuindo alta viscosidade, Sofre variações na temperatura e salinidade. Contém quantidades variáveis de gases dissolvidos, Possui elevada transparência, Varia drasticamente em pressão de acordo com a profundidade. Os organismos marinhos possuem várias adaptações para as condições limitantes do ambiente marinho.</p>
+            </div>
+            
+           
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="#" class="button">Ocean Activity </a>
+                <a href="#" class="button"> Ocean Videos</a>
+            </div>
+        </div>
+
+            
+        
+
+            <!-- PÁGINA 3 - ESPÉCIES -->
+            <section id="page3" class="page">
+                <h2 style="color: #ba55d3; font-weight: bold; margin-bottom: 2rem;">Espécies Marinhas</h2>
+                
+                <div class="slides-container">
+                    <div class="slide active" style="background-image: url('https://supercurioso.com/wp-content/uploads/2014/02/Diseno-sin-titulo-2022-03-08T105501.629.jpg')">
+                        <div class="slide-content">
+                            <h3>Floresta de kelps</h3>
+                            <p>O maior do mundo, podendo alcançar 18m de comprimento. </p>
+                        </div>
+                    </div>
+                    <div class="slide" style="background-image: url('https://images.prismic.io/ocean-agency-cms/eff7160a-e2ec-4eae-8e4e-0ab237e7d480_2000+seagrass+category.jpg?auto=compress,format')">
+                        <div class="slide-content">
+                            <h3>Gramas marinhas ou seagress</h3>
+                            <p>Pradarias de gramas marinhas e vegetação aquática submersa (VAS) estão entre os ecossistemas mais ameaçados do planeta, gerando preocupação sobre o equilíbrio dos ecossistemas costeiros e a sustentabilidade das pescarias.</p>
+                        </div>
+                    </div>
+                    <div class="slide" style="background-image: url('https://img.freepik.com/fotos-premium/poluicao-do-fundo-do-mar-cheia-de-lixo-e-residuos-plasticos-ia_941600-4449.jpg')">
+                        <div class="slide-content">
+                            <h2>Plástico nos ambientes marinhos</h2>
+                            <p>As pradarias predem quantidades de resíduos sólidos, interferindo na sua integridade.  </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slide-nav">
+                    <div class="slide-dot active" data-slide="0"></div>
+                    <div class="slide-dot" data-slide="1"></div>
+                    <div class="slide-dot" data-slide="2"></div>
+                </div>
+            </section>
+
+            <!-- PÁGINA 4 - ECOSSISTEMAS -->
+            <section id="page4" class="page">
+                <h2 style="color: #ff8c00; margin-bottom: 2rem;">Ecossistemas Marinhos</h2>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 15px;">
+                        <h2 style="color: linear-gradient(135deg, #C7C2C4, rgba(0, 191, 255, 0.7)); margin-bottom: 1rem;">pradarias marinhas</h2>
+                        <img src="https://img.freepik.com/fotos-premium/poluicao-do-fundo-do-mar-cheia-de-lixo-e-residuos-plasticos-ia_941600-4449.jpg" alt="Recife de coral saudável com diversas cores e peixes tropicais nadando" style="width: 300px; border-radius: 10px; margin-bottom: 1rem;"/>
+                        <p>A despeito de sua importância ecológica e econômica, os fundos vegetados submersos têm desaparecido rapidamente da maioria das regiões costeiras do globo. Cerca de 30% das pradarias de gramas marinhas desapareceram desde o final do século XIX. 
+Degradações de ambientes estuarinos têm sido registradas em regiões dos EUA e Europa com valores de até 100% de perda dos habitats de VAS no entorno de grandes centros. As taxas de perdas, entre 2 a 5% ao ano, aumentaram significativamente a partir da segunda metade do século XX, devido à rápida ocupação e degradação dos ambientes costeiros, posicionando as pradarias submersas dentre os habitats mais ameaçados do mundo.</p>
+
+<p>
+ Além de altamente vulneráveis a impactos antropogênicos diversos, pradarias de gramas marinhas e VAS são afetadas por variabilidade climática/hidrológica como vazão de rios, variações de temperatura, salinidade, tempestades e clima de ondas. Várias espécies de angiospermas marinhas são consideradas sentinelas costeiras (coastal canaries), já que respondem rapidamente às mudanças na qualidade da água. Dessa maneira, as pradarias são também altamente vulneráveis às mudanças climáticas globais (MCG) observadas e previstas, como aumento da temperatura superficial do mar, elevação do nível médio do mar e acidificação dos oceanos, que afetam potencialmente a fisiologia das plantas. </p>
+
+<p>
+O estado atual de degradação dos ambientes costeiros, as perdas dos habitats de FVS, a ausência de dados temporais e espaciais na maioria das regiões costeiras e a alta vulnerabilidade das pradarias aos impactos antropogênicos diversos e às mudanças climáticas globais, têm incentivado a criação de programas de monitoramento (Seagrass Net, Short et al., 2006; Seagrass Watch, McKenzie et al., 2003) e de recuperação (Shafer & Bergstrom, 2010) dos habitats costeiros vegetados em diversas partes do mundo, além de painéis de discussão focados em ações e políticas de conservação
+</p>
+                    </div>
+                    
+                </div>
+            </section>
+
+            <!-- PÁGINA 5 - PRESERVAÇÃO -->
+            <section id="page5" class="page">
+                <h2 style="color: #4682b4; margin-bottom: 2rem;">Preservação dos fundos vegetados submersos</h2>
+                
+                <div style="background: rgba(176, 196, 222, 0.3); padding: 2rem; border-radius: 15px; margin-top: 1rem;">
+                    <h3 style="margin-bottom: 1rem;">Ameaças evidentes</h3>
+                    <ul style="margin-left: 2rem; line-height: 1.8;">
+                        <li>Poluição por plásticos (8 milhões de toneladas/ano)</li>
+                        <li>Pesca predatória e excessiva</li>
+                        <li>Acidificação dos oceanos (absorvem 30% do CO2)</li>
+                        <li>Mudanças climáticas (aumento da temperatura)</li>
+                    </ul>
+
+                    <div style="margin-top: 2rem; display: flex; align-items: center; gap: 2rem;">
+                        <img src="https://png.pngtree.com/thumb_back/fh260/background/20230425/pngtree-sea-water-sunlight-light-underwater-world-coral-plant-advertising-background-image_2474685.jpg" alt="Lixo plástico flutuando no oceano com peixes tentando nadar através dele" style="width: 200px; border-radius: 10px;"/>
+                        <div>
+                            <h3 style="margin-bottom: 1rem;">Como Ajudar?</h3>
+                            <p>Reduza o uso de plástico, consuma peixe de forma sustentável, participe de limpezas de praia e divulgue informação sobre a importância dos oceanos.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PÁGINA 6 - CONCLUSÃO -->
+            <section id="page6" class="page">
+                <h2 style="color: #708090; margin-bottom: 2rem;">Conclusão e Referências</h2>
+                
+                <div style="margin-bottom: 2rem;">
+                    <p style="line-height: 1.8; margin-bottom: 2rem;">Os fundos vegetados são essenciais para a vida no planeta. Eles regulam o clima, produzem oxigênio e fornecem alimento e recursos para milhares seres marinhos. No entanto, enfrentam ameaças sem precedentes devido à atividade humana. É nossa responsabilidade proteger esses ecossistemas vitais para as gerações futuras. <br/>Os ecossistemas marinhos são fundamentais para o equilíbrio das espécies marinhas.
+                    Sem eles, a vida como a conhecemos não seria possível. Manter o equilíbrio
+                    saudável nestes ecossistemas é crucial para o bem-estar ambiental.</p>
+                    <p></p>
+</p>
+                    
+                    <h3 style="margin-bottom: 1rem;">Referências:</h3>
+                    <ul style="margin-left: 2rem; line-height: 1.8;">
+                        <li>NOAA - National Oceanic and Atmospheric Administration</li>
+                        <li>https://www.scielo.br/j/bjoce/a/QzTy3pqBSSm3pqYC5wGsKkq/</li>
+                        <li>https://books.scielo.org/id/x49kz/pdf/turra-9788598729251-03.pdf</li>
+                        <li>https://repositorio.ufsc.br/handle/123456789/227639</li>
+                    </ul>
+                </div>
+
+
+
+                
+
+
+
+                
+
+
+
+                                        
+                <!--<div style="padding: 25px;">
+                <button style="color: yellowgreen; font-size:33px;" class="box" onclick="Export2Word('exportContent')">Baixar documento</button>
+                    
+                    <script> 
+
+                    function Export2Word(element, filename = ''){
+                    var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
+                    var postHtml = "</body></html>";
+                    var html = preHtml+document.getElementById(element).innerHTML+postHtml;
+
+                    var blob = new Blob(['\ufeff', html], {
+                        type: 'application/msword'
+                    });
+                    
+                    // Specify link url
+                    var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
+                    
+                    // Specify file name
+                    filename = filename?filename+'.doc':'document.doc';
+                    
+                    // Create download link element
+                    var downloadLink = document.createElement("a");
+
+                    document.body.appendChild(downloadLink);
+                    
+                    if(navigator.msSaveOrOpenBlob ){
+                        navigator.msSaveOrOpenBlob(blob, filename);
+                    }else{
+                        // Create a link to the file
+                        downloadLink.href = url;
+                        
+                        // Setting the file name
+                        downloadLink.download = filename;
+                        
+                        //triggering the function
+                        downloadLink.click();
+                    }
+                    
+                    document.body.removeChild(downloadLink);
+                }
+
+                    </script> 
+
+                </div>-->
+
+
+
+                <footer>
+                    <div class="footer-content">
+                        <div>
+                            <h3>Autores</h3>
+                            <p>Laura aquino </p>           
+                            <p>Catharina alvarez</p>
+                            <p>Eduarda medeiros</p>
+                            <p>Weverson silva</p>
+                        </div>
+                        <div>
+                            
+                            
+                            
+                        </div>
+                        <div>
+                            <h3>Links Úteis</h3>
+                            <p><a href="#" style="color: white;">www.cartilhamarinha.org</a></p>
+                            <p><a href="#" style="color: white;">www.oceanconservancy.org</a></p>
+                        </div>
+                    </div>
+                    <p style="margin-top: 2rem; font-size: 0.9rem;">© Cartilha ecossistemas Marinhos - Todos os direitos reservados</p>
+
+                    <div class="rodape" style="background-position: right; text-align: right; "> <img width="80px" src="https://static.vecteezy.com/system/resources/thumbnails/022/484/292/small_2x/modern-3d-scientist-man-in-white-laboratory-coat-holding-a-test-tube-transparent-background-free-png.png">
+</div>
+                </footer>
+            </section>
+    
+        </div>
+
+    </div>
+
+        <!-- GLOSSÁRIO -->
+        <div class="glossary" id="glossary">
+            <h2 style="margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.3); padding-bottom: 1rem;">Glossário Marinho</h2>
+            
+            <div class="term">
+                <h3>Bentônicos</h3>
+                <p>Organismos que vivem no fundo do mar, como estrelas-do-mar e ouriços.</p>
+            </div>
+            <div class="term">
+                <h3>Fotossíntese</h3>
+                <p>Produção de glicose a partir da luz por organismos vivos através de reações</p>
+            </div>
+            <div class="term">
+                <h3>Ecossistema</h3>
+                <p>Comunidade de organismos interagindo com seu ambiente físico.</p>
+            </div>
+            <div class="term">
+                <h3>sisnama </h3>
+                <p>Plantas microscópicas que flutuam na água, base da cadeia alimentar marinha.</p>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- NAVEGAÇÃO -->
+    <div class="nav-buttons">
+        <div class="nav-btn" id="prev-btn">←</div>
+        <div class="nav-btn" id="next-btn">→</div>
+    </div>
+
+    <script>
+        // NAVEGAÇÃO ENTRE PÁGINAS
+        const pages = document.querySelectorAll('.page');
+        const mainContent = document.getElementById('main-content');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        let currentPage = 0;
+
+        function showPage(index) {
+            if (index < 0 || index >= pages.length) return;
+            
+            currentPage = index;
+            mainContent.style.transform = `translateY(-${currentPage * 100}vh)`;
+        }
+
+        prevBtn.addEventListener('click', () => showPage(currentPage - 1));
+        nextBtn.addEventListener('click', () => showPage(currentPage + 1));
+
+        // GLOSSÁRIO
+        const glossaryBtn = document.getElementById('glossary-btn');
+        const glossary = document.getElementById('glossary');
+
+        glossaryBtn.addEventListener('click', () => {
+            glossary.classList.toggle('active');
+        });
+
+        // SLIDES
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.slide-dot');
+        let currentSlide = 0;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+            currentSlide = index;
+        }
+
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                showSlide(parseInt(dot.dataset.slide));
+            });
+        });
+
+        // Auto-advance slides
+        setInterval(() => {
+            let nextSlide = (currentSlide + 1) % slides.length;
+            showSlide(nextSlide);
+        }, 5000);
+    </script>
+
+
+
+            <!-- Inclua a biblioteca html2pdf -->
+        
+
+        <!-- Botão para acionar o download -->
+        <button onclick="baixarPDF()">Baixar Página em PDF</button>
+
+        <script>
+          function baixarPDF() {
+            const elemento = document.body; // ou use um ID específico: document.getElementById("conteudo")
+
+            const opcoes = {
+              margin:       0.5,
+              filename:     'pagina.pdf',
+              image:        { type: 'jpeg', quality: 0.98 },
+              html2canvas:  { scale: 2 },
+              jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opcoes).from(elemento).save();
+          }
+</script>
+
+
+
+   
+
+</body>
+</html>
+
+
+
