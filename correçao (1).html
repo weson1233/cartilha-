@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>extensão 2025 - Apresentação Responsiva</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --text: #333;
+            --light: #ecf0f1;
+            --nav-width: 250px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            background: #fff;
+        }
+
+        /* --- NAVEGAÇÃO --- */
+        #nav-menu {
+            position: fixed;
+            width: var(--nav-width);
+            height: 100vh;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            padding: 12px;
+            margin: 5px 0;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
+
+        nav a:hover { background: var(--accent); color: white; }
+
+        /* Botão Mobile */
+        .mobile-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 1100;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* --- CONTEÚDO PRINCIPAL --- */
+        main {
+            margin-left: var(--nav-width);
+            width: calc(100% - var(--nav-width));
+            transition: all 0.3s ease;
+        }
+
+        section {
+            min-height: 100vh;
+            padding: 5% 10%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        section:nth-child(even) { background-color: #f8f9fa; }
+
+        /* --- COMPONENTES --- */
+        h1 { font-size: clamp(2rem, 5vw, 3.5rem); color: var(--primary); line-height: 1.1; margin-bottom: 20px; }
+        h3 { font-size: clamp(1.5rem, 3vw, 2rem); color: var(--accent); margin-bottom: 1.5rem; }
+
+        .capa {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-align: center;
+        }
+        .capa h1 { color: white; }
+
+        .metodologia-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--accent);
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .video-container iframe { position: absolute; top:0; left:0; width:100%; height:100%; border:0; }
+
+        .poll-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+        .option {
+            padding: 12px;
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .option:hover { background: #f0f7ff; border-color: var(--accent); }
+        .selected { background: var(--accent) !important; color: white; }
+
+        /* --- RESPONSIVIDADE (MOBILE) --- */
+        @media (max-width: 992px) {
+            .mobile-toggle { display: block; }
+            
+            #nav-menu {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+
+            #nav-menu.active { transform: translateX(0); }
+
+            main {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            section { padding: 80px 20px; }
+        }
+
+	
+	/* Estilo da div */
+        .caixa-texto {
+            
+        }
+
+        /* Estilo da lista */
+        
+        }
+	.caixa-texto ol {
+            padding-left: 20px;
+
+	
+    </style>
+</head>
+<body>
+
+    <button class="mobile-toggle" onclick="toggleMenu()">☰ Menu</button>
+
+    <nav id="nav-menu">
+        <div class="nav-logo">Trabalho de extensão 2025</div>
+        <a href="#inicio" onclick="toggleMenu()">Início</a>
+        <a href="#problema" onclick="toggleMenu()">Problema</a>
+        <a href="#video" onclick="toggleMenu()">Demonstração</a>
+        <a href="#metodologia" onclick="toggleMenu()">Metodologia</a>
+	<a href="#cronograma" onclick="toggleMenu()">Cronograma</a>
+	<a href="#resultados"onclick="toggleMenu()" >Resultados</a>
+	<a href="#conclusao"onclick="toggleMenu()" >Conclusão</a>
+        <a href="#enquete" onclick="toggleMenu()">Interação</a>
+    </nav>
+
+    <main>
+        <section id="inicio" class="capa">
+            <h1>A gestão participativa</h1>
+            <p>Weverson Silva - UNIFESP </p>
+	    <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.7;">TECNOLOGIAS E ESTRATÉGIAS PARA GESTÃO DE SISTEMAS MARINHOS E COSTEIROS
+</p>
+            <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.7;">DOCENTE: RENZO ROMADO TADDEI 
+</p>
+        </section>
+
+        <section id="problema">
+            <h3> O que é um problema socioambiental?
+</h3>		
+	    <p>Problemas socioambientais são questões que envolvem a interação entre a sociedade e o meio ambiente, causando impactos negativos tanto para as pessoas quanto para o ambiente natural. </p>
+            <p>O aumento das emissões de CO2 em 2025, por exemplo, exige soluções imediatas, Como  tecnologia para mitigar impactos</p>
+
+
+
+
+<img width="30%" height="200px" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHpdJ9aW09sdkoauWeYopWN_BXPsHM_a9XlGPFqBb17A&s" />
+
+
+
+
+s
+<h3> Promoção da participação coletiva na resolução de problemas socioambientais: Gestão participativa
+</h3>	
+<p>A gestão participativa é uma abordagem que valoriza o envolvimento ativo da comunidade, organizações e diferentes atores sociais na tomada de decisões e na implementação de soluções para desafios socioambientais. Ela fortalece o senso de pertencimento e responsabilidade compartilhada, criando soluções mais sustentáveis e eficazes.</p>
+
+<h3>  Princípios da Gestão Participativa
+</h3>	
+<p>Inclusão social:</p>
+
+
+<p>Transparência: </p>
+
+
+<p>Diálogo e cooperação: </p>
+
+
+<p>Empoderamento comunitário: </p>
+
+
+<p>Corresponsabilidade: 
+</p>
+
+
+<h3>  Plano de Ação Participativo e cronograma 
+
+</h3>	
+<p>primeira etapa de implementação -  Diagnóstico Participativo</p>
+
+
+<p>segunda etapa após uma semana - Formação e Capacitação
+</p>
+
+
+<p>terceira etapa após 3 semanas - Criação de Espaços de Governança</p>
+
+
+<p>quarta etapa após 30 dias - Implementação de Projetos Coletivos
+ </p>
+
+
+<p>quinta etapa após 60 dias-  Monitoramento e Avaliação
+
+</p>
+
+<p>Construção de indicadores socioambiental
+
+</p>
+
+<h3>  Resultados Esperados
+</h3>
+
+<p>Maior conscientização e protagonismo da comunidade.
+</p>
+
+<p>Redução de impactos ambientais locais.
+</p>
+
+<p>Criação de soluções sustentáveis e duradouras.
+</p>
+
+<h3>  Conclusão
+
+</h3>
+
+<img width="30%" height="200px" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSddVv1RNpD6JcDsUTo_tkl8Ro0AlQyDzJaiw&s" />
+<p>A gestão participativa é um caminho para transformar problemas socioambientais em oportunidades de cooperação e inovação. O plano de ação fortalece o vínculo entre comunidade e meio ambiente, promovendo justiça social e sustentabilidade. A COP 30 é grande um exemplo de força coletiva para solucionar as crises e problemas socioambientais. 
+</p>
+<p>Criação de soluções sustentáveis e duradouras.
+</p>
+
+
+<h3> Material de referência
+
+</h3>
+
+<p>https://docs.google.com/document/d/1yIMjJ_cWZW1_zVqQwtr4GMGDmh-FXB6EmSBI4RGzY5o/edit?tab=t.0
+</p>
+
+
+<p>https://www2.petros.com.br/pp2-participante
+</p>
+
+
+
+
+
+
+
+        </section>
+
+        <section id="video">
+            <h3>Demonstração</h3>
+            <div class="video-container">
+<iframe id="player" type="text/html" width="640" height="390"
+  src="http://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1&origin=http://example.com"
+  frameborder="0"></iframe>
+
+			<iframe width="560" height="315" src="https://odysee.com/%24/embed/%40tolisoprano%3A7%2Fgorillaz-clint-eastwood-%281960%27s-motown%3A1?r=FCnPK4dTX12QyGWricZ6CDTg9X4SMm2m" ></iframe>
+
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/4GCA7ZyaID0?si=iwLeCLBYZiRuqhtk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write;  gyroscope; picture-in-picture; web-share" </iframe>
+               
+            </div>
+        </section>
+
+	 <section id="video">
+            <h3>Desigualdade</h3>
+            <div class="video-container">
+			<img with="300px" src="https://th.bing.com/th/id/OIP.ifMvrJGwLrmWv6qPx-nA5QHaEk?w=274&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1"/>
+<h3>Dentre os principais problemas: o capitalismo e concentração de renda</h3>
+<p>Os principais problemas do capitalismo como fator de causa incluem a degradação ambiental, a intensificação das desigualdades sociais e a perda de valores humanos. Esses problemas são causados pela busca excessiva por lucro, disputa por matérias-primas e recursos naturais, e o incremento da individualidade.</p>
+            </div>
+        </section>
+
+        <section id="metodologia">
+            <h3>Metodologia</h3>
+            <div class="metodologia-grid">
+                <div class="card">
+                    <h4>Fase 1: Instrumentos de gestão participativa aplicados ao meio ambiente</h4>
+                    <p> 
+Aqui entram mecanismos formais e informais que podem ser usados em políticas públicas, projetos comunitários ou iniciativas privadas:</p>
+<ul>
+Mecanismos formais:
+Conselhos de meio ambiente
+Audiências públicas
+Conferências temáticas
+Comitês de bacias hidrográficas
+Orçamento participativo
+Planos diretores participativos</ul>
+
+<p>Mecanismos informais:</p>
+<uL>
+Oficinas comunitárias
+Diagnósticos participativos (DRP, mapeamento social)
+Grupos de trabalho locais
+Assembleias de bairro
+Plataformas digitais de participação
+Esses instrumentos permitem que a população influencie diretamente decisões que afetam seu território.
+</ul>
+                </div>
+                <div class="card">
+                    <h4>Fase 2: Análise</h4>
+                    <p>Estratégias para promover a participação coletiva
+Conselhos e comitês locais: criar espaços formais de decisão sobre questões ambientais.
+Educação ambiental: capacitar a comunidade para compreender problemas e propor soluções.
+Ferramentas digitais: uso de plataformas online para consultas públicas e votação de propostas.
+Projetos colaborativos: hortas comunitárias, mutirões de limpeza, reciclagem solidária.
+Parcerias intersetoriais: unir governo, empresas e sociedade civil em projetos conjuntos.
+</p>
+                </div>
+            </div>
+        </section>
+
+ <section id="metodologia">
+            <h3></h3>
+            <div class="metodologia-grid">
+                <div class="card">
+                    <h4>Fase 1: Coleta</h4>
+                    <p> Exemplos práticos
+Orçamento participativo: parte dos recursos públicos destinados a projetos escolhidos pela comunidade.
+Gestão de resíduos: cooperativas de reciclagem com participação ativa de moradores.
+Proteção de áreas verdes: criação de conselhos gestores em parques urbanos.
+</p>
+
+<p>Processamento em nuvem utilizando IA para predição de picos de calor.</p>
+                </div>
+                <div class="card">
+                    <h4>Fase 2: Plano de Ação Participativo para Problemas Socioambientais
+</h4>
+                    <p>Objetivo
+Promover a participação coletiva na identificação, discussão e resolução de problemas socioambientais, fortalecendo a gestão participativa e a corresponsabilidade entre comunidade, governo, empresas e organizações sociais.
+</p>
+
+<h4>Fase 2: Etapas do Plano
+
+</h4>
+   <p>1. Diagnóstico Participativo:
+Realizar oficinas comunitárias para mapear problemas socioambientais locais.
+Utilizar ferramentas como mapas falados, rodas de conversa e questionários.
+Garantir a inclusão de diferentes grupos sociais (moradores, jovens, idosos, lideranças, ONGs).
+
+</p>
+
+<h4>Fase 2: 2. Formação e Capacitação
+
+
+</h4>
+  <p>2. Formação e Capacitação:
+Promover cursos e palestras de educação ambiental.
+Capacitar lideranças comunitárias em técnicas de gestão participativa.
+Incentivar práticas sustentáveis no cotidiano (reciclagem, economia de água e energia).
+
+</p>
+
+ <p>2. Formação e Capacitação:
+Promover cursos e palestras de educação ambiental.
+Capacitar lideranças comunitárias em técnicas de gestão participativa.
+Incentivar práticas sustentáveis no cotidiano (reciclagem, economia de água e energia).
+
+</p>
+
+ <p>3. Criação de Espaços de Governança:
+Estabelecer conselhos gestores locais com representantes da comunidade.
+Definir regras claras de funcionamento e tomada de decisão.
+Garantir transparência e acesso às informações.
+
+
+</p>
+
+ <p>4. Implementação de Projetos Coletivos:
+Hortas comunitárias e mutirões de limpeza.
+Programas de coleta seletiva e reciclagem solidária.
+Ações de preservação de áreas verdes e recursos hídricos.
+
+
+</p>
+
+ <p>5. Monitoramento e Avaliação:
+Criar indicadores de impacto socioambiental.
+Realizar reuniões periódicas para avaliar avanços e desafios.
+Ajustar estratégias conforme os resultados.
+
+
+
+</p>
+
+
+
+<P> Estratégias de Engajamento:
+Campanhas de comunicação comunitária (rádio local, redes sociais, murais).
+Incentivos à participação (certificados, reconhecimento público, apoio logístico).
+Parcerias intersetoriais entre governo, empresas e sociedade civil. </p>
+
+<p> Estratégias de Engajamento:
+Campanhas de comunicação comunitária (rádio local, redes sociais, murais).
+Incentivos à participação (certificados, reconhecimento público, apoio logístico).
+Parcerias intersetoriais entre governo, empresas e sociedade civil.
+</p>
+
+<p>Resultados Esperados:
+Maior conscientização e protagonismo da comunidade.
+Redução de impactos ambientais locais.
+Fortalecimento da cidadania e da corresponsabilidade.
+Criação de soluções sustentáveis e duradouras.
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </div>
+	<img with="300px" src="https://th.bing.com/th/id/OIP.r1_hrY6PqrT6Fc005h70RAHaE8?w=227&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1" />
+
+            </div>
+        </section>
+	
+	<section id="cronograma">
+            <h3>Cronograma</h3>
+            <div class="video-container">
+                
+            </div>
+        </section>
+
+
+	<section id="resultados">
+            <h3>Resultados</h3>
+            <div class="video-container">
+                <div class="caixa-texto">
+        <h3>Benefícios da gestão participativa em questões socioambientais</h3>
+        <p> </p>
+        <ol>
+            <li>Redução de conflitos</li>
+            <li>Inclusão de saberes diversos</li>
+            <li>Melhoria da qualidade das decisões</li>
+		<li>Fortalecimento do senso de pertencimento</li>
+        </ol>
+    </div>
+
+
+	<div class="caixa-texto">
+        <h3>Desafios da participação coletiva
+</h3>
+        <p>Nem tudo é simples. A gestão participativa enfrenta obstáculos como:
+ </p>
+        <ol>
+            <li>Redução de conflitos</li>
+            <li>Inclusão de saberes diversos</li>
+            <li>Melhoria da qualidade das decisões</li>
+		<li>Fortalecimento do senso de pertencimento</li>
+<p>desigualdade de acesso à informação
+baixa representatividade
+captura por grupos de interesse
+burocratização excessiva
+falta de formação técnica
+cansaço participativo (participação simbólica)
+
+</p>
+        </ol>
+    </div>
+            </div>
+        </section>
+
+	<section id="conclusao">
+            <h3>Conclusão</h3>
+            <div class="video-container">
+                <iframe src="" allowfullscreen></iframe>
+            </div>
+        </section>
+
+        <section id="enquete">
+            <h3>Questionário</h3>
+            <div class="poll-box">
+                <p>Você acredita que a gestão das cidades podem reduzir a pegada de carbono em 30%?</p>
+                <div class="option" onclick="selectOpt(this)">Sim, com tecnologias atuais</div>
+                <div class="option" onclick="selectOpt(this)">Apenas com novas políticas públicas</div>
+                <div class="option" onclick="selectOpt(this)">Não, o impacto será menor</div>
+                <button onclick="alert('Voto registrado!')" style="margin-top:15px; padding:10px 20px; cursor:pointer; background:var(--primary); color:white; border:none; border-radius:5px;">Enviar resposta</button>
+            </div>
+        </section>
+
+	 <section id="referencias">
+            <h3>referecias</h3>
+            <div class="metodologia-grid">
+                <div class="card">
+                    <h4>Fase 1: Coleta</h4>
+                    <p>Uso de sensores IoT para monitoramento de poluentes atmosféricos.</p>
+                </div>
+                <div class="card">
+                    <h4>Fase 2: Análise</h4>
+                    <p>Processamento em nuvem utilizando IA para predição de picos de calor.</p>
+                </div>
+            </div>
+        </section>
+
+	 <section id="metodologia">
+            <h3>Metodologia</h3>
+            <div class="metodologia-grid">
+                <div class="card">
+                    <h4>Fase 1: Coleta</h4>
+                    <p>Uso de sensores IoT para monitoramento de poluentes atmosféricos.</p>
+                </div>
+                <div class="card">
+                    <h4>Fase 2: Análise</h4>
+                    <p>Processamento em nuvem utilizando IA para predição de picos de calor.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function toggleMenu() {
+            const nav = document.getElementById('nav-menu');
+            if (window.innerWidth <= 992) {
+                nav.classList.toggle('active');
+            }
+        }
+
+        function selectOpt(el) {
+            document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+    </script>
+</body>
+</html>
