@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo do Macaco</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #2c3e50;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #game-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        #game-container {
+            position: relative;
+            width: 400px;
+            height: 600px;
+            background: linear-gradient(to bottom, #87CEEB 0%, #E0F7FA 100%);
+            border: 5px solid #34495e;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        #score-board {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        #monkey {
+            position: absolute;
+            width: 55px;
+            height: 55px;
+            font-size: 40px;
+            text-align: center;
+            line-height: 55px;
+            user-select: none;
+            z-index: 5;
+            transition: transform 0.1s;
+        }
+
+        .cube {
+            position: absolute;
+            background: linear-gradient(to bottom, #8B4513 0%, #654321 100%);
+            border-top: 4px solid #A0522D;
+            border-radius: 5px;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+        }
+
+        #game-over-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 20;
+        }
+
+        #game-over-screen h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            color: #e74c3c;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        #game-over-screen p {
+            font-size: 24px;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-play {
+            background-color: #ae27a7;
+        }
+        .btn-play:hover {
+            background-color: #7a1892;
+        }
+
+        .btn-pause {
+            background-color: #f39c12;
+        }
+        .btn-pause:hover {
+            background-color: #f1c40f;
+        }
+
+        .btn-restart {
+            background-color: #6220ce;
+        }
+        .btn-restart:hover {
+            background-color: #5a146b;
+        }
+
+        #controls-hint {
+            color: #ecf0f1;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        #controls-hint kbd {
+            background: #34495e;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin: 0 3px;
+        }
+
+        #buttons-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        #pause-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 15;
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        h1{ color: rgba(249, 253, 13, 0.973);}
+
+        h3{ color: #f39c12;}
+    </style>
+</head>
+<body>
+
+    <header>
+         <div class="container"><div> <h1>Ajude o Ryan </br> com os obstaculos!</h1></div></div> 
+    </header>
+
+    <div id="game-wrapper">
+        <div id="game-container">
+            <div id="score-board">Pontos: 0</div>
+            <!--<div id="monkey">🐒</div>-->
+            <img id="monkey" src="https://imgs.search.brave.com/VCfzEROUMkIVZNHL7wxeO-sC1EU_6cQ6PEo7_I2OIQk/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNDkv/NTc1LzA0Ny9zbWFs/bC9hLWNhcnRvb24t/Ym95LWluLWEtZ3Jl/ZW4tc2hpcnQtYW5k/LWJyb3duLXBhbnRz/LXBuZy5wbmc">
+            <div id="pause-overlay">PAUSADO</div>
+            
+            <div id="game-over-screen">
+                <h1>Fim de Jogo!</h1>
+                <p>Sua Pontuação: <span id="final-score">0</span></p>
+                <button class="btn btn-restart" onclick="restartGame()">Jogar Novamente</button>
+            </div>
+        </div>
+
+        <div id="buttons-container">
+            <button class="btn btn-play" id="play-btn" onclick="playGame()">▶ Play</button>
+            <button class="btn btn-pause" id="pause-btn" onclick="pauseGame()">⏸ Pause</button>
+            <button class="btn btn-restart" onclick="restartGame()">🔄 Reiniciar</button>
+        </div>
+
+        <div id="controls-hint">
+            <kbd>←</kbd> <kbd>→</kbd> Mover &nbsp;|&nbsp; <kbd>Espaço</kbd> Pular
+        </div>
+    </div>
+
+    <div class="container"> <h3>weverson silva</h3></div>
+
+    <script>
+        // === Elementos do DOM ===
+        const container = document.getElementById('game-container');
+        const monkeyElem = document.getElementById('monkey');
+        const scoreElem = document.getElementById('score-board');
+        const gameOverScreen = document.getElementById('game-over-screen');
+        const finalScoreElem = document.getElementById('final-score');
+        const pauseOverlay = document.getElementById('pause-overlay');
+        const playBtn = document.getElementById('play-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+
+        // === Configurações do Jogo ===
+        const GAME_WIDTH = 400;
+        const GAME_HEIGHT = 600;
+        const MONKEY_SIZE = 45;
+        const CUBE_WIDTH = 80;
+        const CUBE_HEIGHT = 18;
+        const PLATFORM_GAP = 100;
+
+        // === Variáveis do Jogo ===
+        let monkey = { x: 0, y: 0, vx: 0, vy: 0 };
+        let cubes = [];
+        let score = 0;
+        let isGameOver = false;
+        let isPaused = false;
+        let isPlaying = false;
+        let keys = {};
+        let animationId = null;
+        let highestPlatformY = GAME_HEIGHT;
+
+        // === Configurações de Física ===
+        const gravity = 0.6;
+        const friction = 0.85;
+        const jumpStrength = -14;
+        const moveSpeed = 0.8;
+        const maxSpeed = 7;
+        let onGround = false;
+
+        // === Inicialização ===
+        function initGame() {
+            // Remove plataformas existentes
+            document.querySelectorAll('.cube').forEach(e => e.remove());
+            
+            // Reseta variáveis
+            monkey = { 
+                x: GAME_WIDTH / 2 - MONKEY_SIZE / 2, 
+                y: GAME_HEIGHT - 150, 
+                vx: 0, 
+                vy: 0 
+            };
+            cubes = [];
+            score = 0;
+            isGameOver = false;
+            isPaused = false;
+            isPlaying = false;
+            keys = {};
+            highestPlatformY = GAME_HEIGHT;
+            onGround = false;
+
+            // Atualiza interface
+            scoreElem.innerText = "Pontos: 0";
+            gameOverScreen.style.display = 'none';
+            pauseOverlay.style.display = 'none';
+            monkeyElem.style.display = 'block';
+            
+            // Atualiza botões
+            playBtn.disabled = false;
+            pauseBtn.disabled = true;
+
+            // Cria plataforma inicial (mais larga)
+            createCube(0, GAME_HEIGHT - 50, GAME_WIDTH);
+            
+            // Cria plataformas iniciais
+            for(let i = 1; i < 8; i++) {
+                createRandomCube(GAME_HEIGHT - 50 - (i * PLATFORM_GAP));
+            }
+
+            // Atualiza posição visual do macaco
+            updateMonkeyPosition();
+        }
+
+        function createCube(x, y, width) {
+            const div = document.createElement('div');
+            div.classList.add('cube');
+            div.style.left = x + 'px';
+            div.style.top = y + 'px';
+            div.style.width = width + 'px';
+            div.style.height = CUBE_HEIGHT + 'px';
+            container.appendChild(div);
+            
+            cubes.push({ 
+                element: div, 
+                x: x, 
+                y: y, 
+                width: width, 
+                height: CUBE_HEIGHT 
+            });
+            
+            // Atualiza a plataforma mais alta
+            if (y < highestPlatformY) {
+                highestPlatformY = y;
+            }
+        }
+
+        function createRandomCube(y) {
+            const x = Math.random() * (GAME_WIDTH - CUBE_WIDTH);
+            createCube(x, y, CUBE_WIDTH);
+        }
+
+        // === Controles ===
+        document.addEventListener('keydown', (e) => {
+            keys[e.code] = true;
+            
+            // Previne rolagem da página
+            if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
+                e.preventDefault();
+            }
+            
+            // Espaço também inicia o jogo se estiver parado
+            if (e.code === 'Space' && !isPlaying && !isGameOver) {
+                playGame();
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            keys[e.code] = false;
+        });
+
+        // === Funções de Controle ===
+        function playGame() {
+            if (isGameOver || isPlaying) return;
+            
+            isPlaying = true;
+            isPaused = false;
+            playBtn.disabled = true;
+            pauseBtn.disabled = false;
+            pauseOverlay.style.display = 'none';
+            
+            gameLoop();
+        }
+
+        function pauseGame() {
+            if (!isPlaying || isGameOver) return;
+            
+            isPaused = true;
+            isPlaying = false;
+            playBtn.disabled = false;
+            pauseBtn.disabled = true;
+            pauseOverlay.style.display = 'flex';
+            
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+        }
+
+        function restartGame() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            initGame();
+        }
+
+        // === Física e Lógica ===
+        function updatePhysics() {
+            if (isGameOver || isPaused) return;
+
+            // Movimento horizontal com setas
+            if (keys['ArrowLeft']) {
+                monkey.vx -= moveSpeed;
+                monkeyElem.style.transform = 'scaleX(-1)'; // Espelha o macaco para esquerda
+            }
+            if (keys['ArrowRight']) {
+                monkey.vx += moveSpeed;
+                monkeyElem.style.transform = 'scaleX(1)'; // Normal para direita
+            }
+            
+            // Limita velocidade máxima
+            monkey.vx = Math.max(-maxSpeed, Math.min(maxSpeed, monkey.vx));
+            
+            // Aplica fricção
+            monkey.vx *= friction;
+            
+            // Para completamente se velocidade for muito pequena
+            if (Math.abs(monkey.vx) < 0.1) monkey.vx = 0;
+            
+            monkey.x += monkey.vx;
+
+            // Wraparound da tela (passa de um lado para outro)
+            if (monkey.x < -MONKEY_SIZE) monkey.x = GAME_WIDTH;
+            if (monkey.x > GAME_WIDTH) monkey.x = -MONKEY_SIZE;
+
+            // Aplica gravidade
+            monkey.vy += gravity;
+            monkey.y += monkey.vy;
+
+            // Pulo com espaço
+            if (keys['Space'] && onGround) {
+                monkey.vy = jumpStrength;
+                onGround = false;
+            }
+
+            // Colisão com plataformas
+            onGround = false;
+            
+            // Verifica se caiu do jogo
+            if (monkey.y > GAME_HEIGHT) {
+                endGame();
+                return;
+            }
+
+            // Detecta colisão com cada plataforma
+            cubes.forEach(cube => {
+                if (
+                    monkey.vy > 0 && // Só colide caindo
+                    monkey.x + MONKEY_SIZE > cube.x &&
+                    monkey.x < cube.x + cube.width &&
+                    monkey.y + MONKEY_SIZE >= cube.y &&
+                    monkey.y + MONKEY_SIZE <= cube.y + cube.height + 20
+                ) {
+                    monkey.vy = 0;
+                    monkey.y = cube.y - MONKEY_SIZE;
+                    onGround = true;
+                }
+            });
+
+            // Sistema de Câmera (move o cenário para baixo quando o macaco sobe muito)
+            const cameraThreshold = GAME_HEIGHT * 0.45;
+            
+            if (monkey.y < cameraThreshold) {
+                const diff = cameraThreshold - monkey.y;
+                monkey.y = cameraThreshold;
+                
+                // Move todas as plataformas para baixo
+                cubes.forEach(cube => {
+                    cube.y += diff;
+                    cube.element.style.top = cube.y + 'px';
+                });
+                
+                // Atualiza posição da plataforma mais alta
+                highestPlatformY += diff;
+                
+                // Aumenta pontuação
+                score += Math.floor(diff);
+                scoreElem.innerText = "Pontos: " + score;
+
+                // Remove plataformas que saíram da tela
+                cubes = cubes.filter(c => {
+                    if (c.y > GAME_HEIGHT) {
+                        c.element.remove();
+                        return false;
+                    }
+                    return true;
+                });
+
+                // Gera novas plataformas no topo
+                if (highestPlatformY > 80) {
+                    const newY = highestPlatformY - PLATFORM_GAP;
+                    createRandomCube(newY);
+                }
+            }
+        }
+
+        function updateMonkeyPosition() {
+            monkeyElem.style.left = monkey.x + 'px';
+            monkeyElem.style.top = monkey.y + 'px';
+        }
+
+        function endGame() {
+            isGameOver = true;
+            isPlaying = false;
+            
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            
+            finalScoreElem.innerText = score;
+            gameOverScreen.style.display = 'flex';
+            playBtn.disabled = true;
+            pauseBtn.disabled = true;
+        }
+
+        function gameLoop() {
+            if (isGameOver || isPaused) return;
+            
+            updatePhysics();
+            updateMonkeyPosition();
+            
+            animationId = requestAnimationFrame(gameLoop);
+        }
+
+        // === Iniciar Jogo ===
+        initGame();
+    </script>
+</body>
+</html>
