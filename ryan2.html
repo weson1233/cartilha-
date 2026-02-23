@@ -18,7 +18,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: #2c3e50;
+            background-color: #2a3866;
             font-family: 'Segoe UI', Tahoma, sans-serif;
             overflow: hidden;
             touch-action: manipulation;
@@ -28,7 +28,7 @@
             width: 100%;
             padding: 10px;
             text-align: center;
-            background-color: #232323;
+            background-color: #a11a1a;
             color: white;
             position: fixed;
             top: 0;
@@ -120,9 +120,10 @@
         }
 
         .jump-btn {
-            width: 80px;
-            background: #e74c3c;
-            border-radius: 15px;
+            width: 90px;
+            background: #2c3e50;
+            border-radius: 30px;
+            
         }
 
         /* Telas de Overlay */
@@ -154,13 +155,14 @@
 <body>
 
     <header>
-        <h1>Ryan Aventura 🐒</h1>
+        <img  width="20px" src="https://imgs.search.brave.com/w6x3mlac9nZZV1mfPI5BlaSz_2WrANAUUTdZlV_Ou10/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTMv/NTM3Lzc5NC9zbWFs/bC9jYXJ0b29uLWJv/eS1mYWNlLW9uLXRy/YW5zcGFyZW50LWJh/Y2tncm91bmQtZnJl/ZS1wbmcucG5n">
+        <h1>Ryan Aventura</h1>
     </header>
 
     <div id="game-wrapper">
         <div id="game-container">
             <div id="score-board">Pontos: 0</div>
-            <img id="monkey" src="https://imgs.search.brave.com/VCfzEROUMkIVZNHL7wxeO-sC1EU_6cQ6PEo7_I2OIQk/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNDkv/NTc1LzA0Ny9zbWFs/bC9hLWNhcnRvb24t/Ym95LWluL--WEt/Z3Jl/ZW4tc2hpcnQtYW5k/LWJyb3duLXBhbnRz/LXBuZy5wbmc">
+            <img id="monkey" src="https://imgs.search.brave.com/VCfzEROUMkIVZNHL7wxeO-sC1EU_6cQ6PEo7_I2OIQk/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNDkv/NTc1LzA0Ny9zbWFs/bC9hLWNhcnRvb24t/Ym95LWluLWEtZ3Jl/ZW4tc2hpcnQtYW5k/LWJyb3duLXBhbnRz/LXBuZy5wbmc">
             
             <div id="pause-overlay"><h1>PAUSADO</h1><button class="btn btn-restart" onclick="playGame()">Voltar</button></div>
             
@@ -176,7 +178,7 @@
                 <button class="control-btn" id="btn-left">←</button>
                 <button class="control-btn" id="btn-right">→</button>
             </div>
-            <button class="control-btn jump-btn" id="btn-jump">PULAR</button>
+            <button class="control-btn jump-btn" id="btn-jump">saltar</button>
         </div>
 
         <div id="system-controls">
