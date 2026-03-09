@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Jogo do Ryan - Mobile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #2a3866;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        header {
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+            background-color: #a11a1a;
+            color: white;
+            position: fixed;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 { font-size: 1.2rem; color: #f1c40f; }
+
+        #game-wrapper {
+            margin-top: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        #game-container {
+            position: relative;
+            width: 95vw;
+            max-width: 400px;
+            height: 70vh;
+            background: linear-gradient(to bottom, #87CEEB 0%, #E0F7FA 100%);
+            border: 5px solid #34495e;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        #score-board {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px 12px;
+            border-radius: 8px;
+        }
+
+        #monkey {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            z-index: 5;
+        }
+
+        .cube {
+            position: absolute;
+            background: linear-gradient(to bottom, #8B4513 0%, #654321 100%);
+            border-top: 4px solid #A0522D;
+            border-radius: 5px;
+        }
+
+        /* Controles Mobile */
+        #mobile-controls {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            padding: 15px;
+            gap: 10px;
+        }
+
+        .d-pad {
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            width: 65px;
+            height: 65px;
+            background: #34495e;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px #232323;
+        }
+
+        .control-btn:active {
+            transform: translateY(4px);
+            box-shadow: none;
+            background: #2c3e50;
+        }
+
+        .jump-btn {
+            width: 90px;
+            background: #2c3e50;
+            border-radius: 30px;
+            
+        }
+
+        /* Telas de Overlay */
+        #game-over-screen, #pause-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 20;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-restart { background: #9b59b6; color: white; }
+        .btn-pause { background: #f39c12; }
+
+        p {/*color: #631c80;*/ color: #E0F7FA;
+        text-align: right;}
+    </style>
+</head>
+<body>
+
+    <header>
+        <img  width="20px" src="ryan.png">
+        <h1>Ryan Aventura</h1>
+    </header>
+
+    <div id="game-wrapper">
+        <div id="game-container">
+            <p style="color: darkmagenta;">palestinalivre@weverson</p>
+            <div id="score-board">Pontos: 0</div>
+            <img id="monkey" src="https://imgs.search.brave.com/VCfzEROUMkIVZNHL7wxeO-sC1EU_6cQ6PEo7_I2OIQk/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNDkv/NTc1LzA0Ny9zbWFs/bC9hLWNhcnRvb24t/Ym95LWluLWEtZ3Jl/ZW4tc2hpcnQtYW5k/LWJyb3duLXBhbnRz/LXBuZy5wbmc">
+            
+            <div id="pause-overlay"><h1>PAUSADO</h1><button class="btn btn-restart" onclick="playGame()">Voltar</button></div>
+            
+            <div id="game-over-screen">
+                <h1>Fim de Jogo!</h1>
+                <p>Pontos: <span id="final-score">0</span></p>
+                <button class="btn btn-restart" onclick="restartGame()">Tentar de Novo</button>
+            </div>
+        </div>
+
+        <div id="mobile-controls">
+            <div class="d-pad">
+                <button class="control-btn" id="btn-left">←</button>
+                <button class="control-btn" id="btn-right">→</button>
+            </div>
+            <button class="control-btn jump-btn" id="btn-jump">pular</button>
+        </div>
+
+        <div id="system-controls">
+            <button class="btn btn-pause" onclick="pauseGame()">⏸ Pause</button>
+            <button class="btn btn-restart" onclick="restartGame()">🔄 Reset</button>
+        </div>
+       
+    </div>
+
+    
+
+    <script>
+        const container = document.getElementById('game-container');
+        const monkeyElem = document.getElementById('monkey');
+        const scoreElem = document.getElementById('score-board');
+        const gameOverScreen = document.getElementById('game-over-screen');
+
+        let GAME_WIDTH = container.offsetWidth;
+        let GAME_HEIGHT = container.offsetHeight;
+        const MONKEY_SIZE = 45;
+        const CUBE_WIDTH = 80;
+        const CUBE_HEIGHT = 18;
+        const PLATFORM_GAP = 100;
+
+        let monkey = { x: 0, y: 0, vx: 0, vy: 0 };
+        let cubes = [];
+        let score = 0;
+        let isGameOver = false, isPaused = false, isPlaying = true;
+        let keys = {};
+        let animationId = null;
+        let highestPlatformY = GAME_HEIGHT;
+
+        const gravity = 0.6;
+        const jumpStrength = -14;
+        const moveSpeed = 0.8;
+        const maxSpeed = 7;
+        let onGround = false;
+
+        function initGame() {
+            document.querySelectorAll('.cube').forEach(e => e.remove());
+            GAME_WIDTH = container.offsetWidth;
+            GAME_HEIGHT = container.offsetHeight;
+            
+            monkey = { x: GAME_WIDTH / 2 - 25, y: GAME_HEIGHT - 100, vx: 0, vy: 0 };
+            cubes = [];
+            score = 0;
+            isGameOver = false; isPaused = false; isPlaying = true;
+            highestPlatformY = GAME_HEIGHT;
+
+            scoreElem.innerText = "Pontos: 0";
+            gameOverScreen.style.display = 'none';
+            document.getElementById('pause-overlay').style.display = 'none';
+
+            createCube(0, GAME_HEIGHT - 30, GAME_WIDTH);
+            for(let i = 1; i < 7; i++) createRandomCube(GAME_HEIGHT - (i * PLATFORM_GAP));
+
+            if(animationId) cancelAnimationFrame(animationId);
+            gameLoop();
+        }
+
+        function createCube(x, y, width) {
+            const div = document.createElement('div');
+            div.className = 'cube';
+            div.style.cssText = `left:${x}px; top:${y}px; width:${width}px; height:${CUBE_HEIGHT}px;`;
+            container.appendChild(div);
+            cubes.push({ element: div, x, y, width, height: CUBE_HEIGHT });
+            if (y < highestPlatformY) highestPlatformY = y;
+        }
+
+        function createRandomCube(y) {
+            createCube(Math.random() * (GAME_WIDTH - CUBE_WIDTH), y, CUBE_WIDTH);
+        }
+
+        // --- Controles (Teclado + Touch) ---
+        window.addEventListener('keydown', e => keys[e.code] = true);
+        window.addEventListener('keyup', e => keys[e.code] = false);
+
+        const setupMobileBtn = (id, key) => {
+            const btn = document.getElementById(id);
+            btn.addEventListener('touchstart', (e) => { e.preventDefault(); keys[key] = true; });
+            btn.addEventListener('touchend', () => keys[key] = false);
+        };
+
+        setupMobileBtn('btn-left', 'ArrowLeft');
+        setupMobileBtn('btn-right', 'ArrowRight');
+        setupMobileBtn('btn-jump', 'Space');
+
+        function updatePhysics() {
+            if (keys['ArrowLeft']) { monkey.vx -= moveSpeed; monkeyElem.style.transform = 'scaleX(-1)'; }
+            else if (keys['ArrowRight']) { monkey.vx += moveSpeed; monkeyElem.style.transform = 'scaleX(1)'; }
+            else { monkey.vx *= 0.8; }
+
+            monkey.vx = Math.max(-maxSpeed, Math.min(maxSpeed, monkey.vx));
+            monkey.x += monkey.vx;
+
+            // Loop de tela
+            if (monkey.x < -40) monkey.x = GAME_WIDTH;
+            if (monkey.x > GAME_WIDTH) monkey.x = -40;
+
+            monkey.vy += gravity;
+            monkey.y += monkey.vy;
+
+            if (keys['Space'] && onGround) { monkey.vy = jumpStrength; onGround = false; }
+
+            onGround = false;
+            cubes.forEach(cube => {
+                if (monkey.vy > 0 && monkey.x + 35 > cube.x && monkey.x < cube.x + cube.width &&
+                    monkey.y + 45 >= cube.y && monkey.y + 45 <= cube.y + 20) {
+                    monkey.vy = 0; monkey.y = cube.y - 45; onGround = true;
+                }
+            });
+
+            if (monkey.y > GAME_HEIGHT) endGame();
+
+            // Câmera
+            if (monkey.y < GAME_HEIGHT * 0.4) {
+                let diff = GAME_HEIGHT * 0.4 - monkey.y;
+                monkey.y = GAME_HEIGHT * 0.4;
+                score += Math.floor(diff);
+                scoreElem.innerText = "Pontos: " + score;
+                highestPlatformY += diff;
+
+                cubes.forEach(c => {
+                    c.y += diff;
+                    c.element.style.top = c.y + 'px';
+                });
+
+                cubes = cubes.filter(c => {
+                    if (c.y > GAME_HEIGHT) { c.element.remove(); return false; }
+                    return true;
+                });
+
+                if (highestPlatformY > 0) createRandomCube(highestPlatformY - PLATFORM_GAP);
+            }
+        }
+
+        function gameLoop() {
+            if (!isGameOver && !isPaused) {
+                updatePhysics();
+                monkeyElem.style.left = monkey.x + 'px';
+                monkeyElem.style.top = monkey.y + 'px';
+                animationId = requestAnimationFrame(gameLoop);
+            }
+        }
+
+        function pauseGame() { 
+            isPaused = true; 
+            document.getElementById('pause-overlay').style.display = 'flex'; 
+        }
+        function playGame() { 
+            isPaused = false; 
+            document.getElementById('pause-overlay').style.display = 'none'; 
+            gameLoop(); 
+        }
+        function restartGame() { initGame(); }
+        function endGame() { 
+            isGameOver = true; 
+            document.getElementById('final-score').innerText = score;
+            gameOverScreen.style.display = 'flex'; 
+        }
+
+        window.onload = initGame;
+    </script>
+
+     <script> let audio = new Audio('IKson.mp3');
+
+// Toca o áudio na primeira interação do usuário
+document.addEventListener('click', function() {
+    audio.play();
+}, { once: true }); // Remove o listener após a primeira execução   
+
+
+audio.loop = true; // Repete infinitamente
+document.addEventListener('click', () => {
+    audio.play();
+}, { once: true });     </script>
+
+</body>
+</html>
