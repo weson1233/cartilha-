@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Visualizar PPTX </title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: rgba(114, 103, 103, 0.5);
+    }
+    .container {
+        padding: 20px;
+        text-align: center;
+    }
+    iframe {
+        width: 90%;
+        height: 600px;
+        border: none;
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Apresentação</h1>
+    <!-- Substitua o link abaixo pelo link de incorporação do seu PPTX -->
+    <iframe id="pptFrame" src="" allowfullscreen></iframe>
+</div>
+
+<script>
+    // URL de incorporação gerada pelo OneDrive/Office Online
+    // Exemplo: após enviar seu PPTX para OneDrive, clique em "Compartilhar" > "Incorporar"
+    const pptEmbedUrl = "https://docs.google.com/presentation/d/10e6u0rpsoBLZJ_enZFFoTBg-zp1Olp88/edit?usp=drive_link&ouid=118006831930588525410&rtpof=true&sd=true";
+
+    // Validação simples para evitar iframe vazio
+    if (pptEmbedUrl && pptEmbedUrl.startsWith("https://docs.google.com/presentation/d/10e6u0rpsoBLZJ_enZFFoTBg-zp1Olp88/edit?usp=drive_link&ouid=118006831930588525410&rtpof=true&sd=true")) {
+        document.getElementById("pptFrame").src = pptEmbedUrl;
+    } else {
+        document.getElementById("pptFrame").outerHTML = "<p style='color:red;'>URL inválida para o PPTX.</p>";
+    }
+</script>
+</body>
+</html>
