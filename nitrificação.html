@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartilha Nitrificação</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #a8e6cf 0%, #88d8a3 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .cartilha {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .pagina {
+            padding: 30px;
+            min-height: 100vh;
+            position: relative;
+            page-break-after: always;
+            background: linear-gradient(to bottom, #f8fff8 0%, #e8f5e8 100%);
+        }
+
+        .pagina:last-child {
+            page-break-after: avoid;
+        }
+
+        .capa {
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            color: white;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 30px;
+        }
+
+        .capa h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .capa .subtitulo {
+            font-size: 1.5em;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .imagem-capa {
+            width: 100%;
+            max-width: 500px;
+            height: 300px;
+            background: linear-gradient(45deg, #81C784, #66BB6A);
+            border-radius: 20px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h1, h2 {
+            color: #2E7D32;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 2em;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+
+        .secao {
+            margin-bottom: 30px;
+        }
+
+        .imagem-principal {
+            width: 100%;
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .imagem-bacteria {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #FF9800, #F57C00);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2em;
+            margin: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .diagrama {
+            background: white;
+            border: 3px solid #4CAF50;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .equacao {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            background: #f0f8f0;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 5px solid #4CAF50;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #4CAF50;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .curiosidades {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .curiosidade {
+            background: linear-gradient(135deg, #E8F5E8, #C8E6C9);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #4CAF50;
+        }
+
+        .icone {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .rodape {
+            background: #2E7D32;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .cartilha { box-shadow: none; max-width: none; }
+            .pagina { page-break-after: always; min-height: auto; }
+            .pagina:last-child { page-break-after: avoid; }
+        }
+
+        @media (max-width: 768px) {
+            .capa h1 { font-size: 2em; }
+            .pagina { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="cartilha">
+        <!-- PÁGINA 1: CAPA -->
+        <div class="pagina capa">
+            <h1>🌱 Nitrificação</h1>
+            <p class="subtitulo">Transformando Nitrogênio em Fertilidade!</br>Nitrificação por microrganismos do Domínio Bacteria</p>
+            <p style="font-size: 1.2em; margin-bottom: 30px;">Entenda o ciclo que alimenta plantas e solos</p>
+            <div class="imagem-capa">🦠🌿➡️🌱</div>
+            <p style="font-size: 1.1em; opacity: 0.8;"> Unifesp baixada santista .2026</p>
+<p style="font-size: 1.1em; opacity: 0.8;"> Instituto do mar - Bictmar noturno - BMA</p>
+        </div>
+
+        <!-- PÁGINA 2: O que é Nitrificação? -->
+        <div class="pagina">
+            <h1>1. O que é Nitrificação?</h1>
+            <div class="secao">
+                <p><strong>A nitrificação</strong> é um processo biológico essencial realizado por <strong>bactérias específicas como as Nitrosomonas e Nitrobacter </strong> que transformam a amônia (NH₃), tóxica para plantas, em nitrito (NO₂⁻) e nitrato (NO₃⁻), de formas que as plantas podem absorver facilmente.</p> 
+
+<p>é um processo de oxidação do amônio (amônia, em termos 
+de substrato) para nitrito e, subsequentemente, para nitrato (NO3-) realizado 
+por microrganismos quimioautotróficos, que obtêm o C do CO2
+ e a energia da 
+oxidação química para a síntese de seus constituintes celulares </p>
+            </div>
+            <div class="diagrama">
+                <div style="font-size: 3em; margin-bottom: 20px;">🦠 NH₃ → NO₂⁻ → NO₃⁻ 🌱</div>
+                <p><em>Ocorrre principalmente em solos aeróbios e águas ricas em oxigênio</em></p>
+            </div>
+            <div class="imagem-principal" style="background: linear-gradient(135deg, #2196F3 0%, #21CBF3 100%); display: flex; align-items: center; justify-content: center; font-size: 4em;">
+                🔬🦠
+            </div>
+        </div>
+
+        <!-- PÁGINA 3: Ciclo do Nitrogênio -->
+        <div class="pagina">
+            <h1>2. O Ciclo do Nitrogênio</h1>
+            <div class="diagrama" style="text-align: center;">
+                <div style="font-size: 2.5em; margin: 20px 0;">🌍 CICLO DO NITROGÊNIO 🌍</div>
+                <div style="display: flex; justify-content: space-around; flex-wrap: wrap; font-size: 1.3em;">
+                    <div>N₂ ↑<br>Atmosfera</div>
+                    <div>↓ Fixação</div>
+                    <div>NH₃ → NO₃⁻<br><strong style="color: #4CAF50;">Nitrificação</strong></div>
+                    <div>↓ Absorção</div>
+                    <div>Plantas</div>
+                </div>
+            </div>
+            <div class="imagem-principal" style="background: linear-gradient(45deg, #FF6B6B, #4ECDC4); display: flex; align-items: center; justify-content: center; font-size: 5em;">
+                🔄
+            </div>
+        </div>
+
+        <!-- PÁGINA 4-5: Etapas da Nitrificação -->
+        <div class="pagina">
+            <h1>3. Etapas da Nitrificação</h1>
+            
+            <div class="secao">
+                <h2>Etapa 1: Nitrificação I</h2>
+                <p><strong>Bactéria:</strong> <em>Nitrosomonas</em></p>
+                <div class="equacao">2NH₃ + 3O₂ → 2NO₂⁻ + 2H₂O + 2H⁺</div>
+                <p>Amônia é oxidada para <strong>nitrito</strong> (intermediário tóxico).</p>
+                <div class="imagem-bacteria">🦠₁</div>
+            </div>
+
+            <div class="secao">
+                <h2>Etapa 2: Nitrificação II</h2>
+                <p><strong>Bactéria:</strong> <em>Nitrobacter</em></p>
+                <div class="equacao">2NO₂⁻ + O₂ → 2NO₃⁻</div>
+                <p>Nitrito é convertido em <strong>nitrato</strong> (forma ideal para plantas).</p>
+                <div class="imagem-bacteria" style="background: linear-gradient(45deg, #9C27B0, #AB47BC);">🦠₂</div>
+            </div>
+
+            <div class="imagem-principal" style="background: linear-gradient(135deg, #FF9800 0%, #FFC107 100%); font-size:34px;">
+                ⚡O NH4
++ é utilizado como doador de elétrons e o O2
+ como 
+aceptor de elétrons.   ⚡
+            </div>
+        </div>
+
+        <!-- PÁGINA 6: Bactérias -->
+        <div class="pagina">
+            <h1>4. Bactérias Envolvidas</h1>
+            <table>
+                <tr>
+                    <th>Bactéria</th>
+                    <th>Função</th>
+                    <th>Condições Ideais</th>
+                </tr>
+                <tr>
+                    <td><strong style="color: blue">Nitrosomonas</strong></td>
+                    <td>NH₃ → NO₂⁻</td>
+                    <td>pH 7-8, O₂ alto</td>
+                </tr>
+                <tr>
+                    <td><strong>Nitrobacter</strong></td>
+                    <td>NO₂⁻ → NO₃⁻</td>
+                    <td>pH 7-8, O₂ moderado</td>
+                </tr>
+            </table>
+            <div style="display: flex; justify-content: space-around; margin-top: 30px;">
+                <div class="imagem-bacteria " style="color: blue;" >Nitrosomonas</div>
+                <div class="imagem-bacteria" style="color: blue; background: linear-gradient(45deg, #9C27B0, #AB47BC);">Nitrobacter</div>
+            </div>
+        </div>
+
+        <!-- PÁGINA 7: Importância -->
+        <div class="pagina">
+            <h1>5. Importância e Aplicações</h1>
+            <div class="secao">
+                <ul style="font-size: 1.1em; margin-bottom: 30px;">
+                    <li>🌾 <strong>Fertilidade do solo</strong>: Principal fonte de N para plantas</li>
+                    <li>🏭 <strong>Tratamento de esgoto</strong>: Remove amônia tóxica</li>
+                    <li>🌍 <strong>Agricultura sustentável</strong>: Reduz uso de fertilizantes sintéticos</li>
+                    <li>💧 <strong>Aquicultura</strong>: Controle de qualidade da água</li>
+                </ul>
+            </div>
+            <div class="imagem-principal" style="background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%); display: flex; align-items: center; justify-content: center; font-size: 5em; color: white;">
+                🚀 benefícios!
+            </div>
+        </div>
+
+        <!-- PÁGINA 8: Problemas -->
+        <div class="pagina">
+            <h1>6. Problemas e Soluções</h1>
+            <table>
+                <tr>
+                    <th>Problema</th>
+                    <th>Causa</th>
+                    <th>Solução</th>
+                </tr>
+                <tr>
+                    <td>Baixa atividade</td>
+                    <td>Solo ácido</td>
+                    <td>Calagem (aumentar pH)</td>
+                </tr>
+                <tr>
+                    <td>Inibição</td>
+                    <td>Falta de O₂</td>
+                    <td>Aeração do solo</td>
+                </tr>
+                <tr>
+                    <td>Perda de N</td>
+                    <td>Excesso de água</td>
+                    <td>Drenagem adequada</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- PÁGINA 9: Curiosidades e Referencias  -->
+        <div class="pagina">
+            <h1>7. Curiosidades</h1>
+            <div class="curiosidades">
+                <div class="curiosidade">
+                    <div class="icone">🔬</div>
+                    <strong>Descoberta:</strong> Sergei Winogradsky (1890)
+                </div>
+                <div class="curiosidade">
+ <h1><div class="icone">⚡ </div></h1>
+                    
+                    
+
+
+		
+</div>
+
+
+        <!-- PÁGINA 8: Curiosidades e Referencias  -->
+        <div class="pagina">
+             <h1>8. Integrantes</h1>
+           
+                <div class="curiosidade">
+ <h1><div class="icone">⚡ </div>Nomes</h1>
+                    
+                   
+			<p>Weverson silva - 177.371</p>
+			<p>Ingrid Alves Deodato – 164.858</p>
+			<p>Letícia Vitória Silva  – 184.982</p>
+			<p>Amanda da Silva Caires – 162.797</p>
+			<p>Ana beatriz silva - 189.047</p>
+			<p>Izabel santana - 156.275</p>
+
+
+		
+</div>
+
+
+<!-- PÁGINA 9: Curiosidades e Referencias  -->
+        <div class="pagina">
+            <h1>9. Referencias</h1>
+            <div class="curiosidades">
+                <div class="curiosidade">
+                    <div class="icone">🔬</div>
+                    <strong>Artigo:</strong> https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/1090589/1/2017LV04.pdf
+                
+
+</div>
