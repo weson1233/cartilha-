@@ -18,7 +18,7 @@
         width: 90%;
         height: 600px;
         border: none;
-        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        box-shadow: 0 0 10px rgba(114, 103, 103, 0.5);
     }
 
     
@@ -28,16 +28,16 @@
 <div class="container">
     <h1>Apresentação</h1>
     <!-- Substitua o link abaixo pelo link de incorporação do seu PPTX -->
-    <iframe id="pptFrame" src="" allowfullscreen></iframe>
+    <iframe id="pptFrame" src="https://docs.google.com/presentation/d/e/2PACX-1vR8BKfTMiw5QPxcXAU130vsogKPqThw6QJe402ryGgO_0egLAkg0kZ7L-6DXXWLWQ/pubembed?start=false&loop=false&delayms=5000" allowfullscreen></iframe>
 </div>
 
 <script>
     // URL de incorporação gerada pelo OneDrive/Office Online
     // Exemplo: após enviar seu PPTX para OneDrive, clique em "Compartilhar" > "Incorporar"
-    const pptEmbedUrl = "https://docs.google.com/presentation/d/10e6u0rpsoBLZJ_enZFFoTBg-zp1Olp88/edit?usp=drive_link&ouid=118006831930588525410&rtpof=true&sd=true";
+    const pptEmbedUrl = "https://docs.google.com/presentation/d/e/2PACX-1vR8BKfTMiw5QPxcXAU130vsogKPqThw6QJe402ryGgO_0egLAkg0kZ7L-6DXXWLWQ/pubembed?start=false&loop=false&delayms=5000";
 
     // Validação simples para evitar iframe vazio
-    if (pptEmbedUrl && pptEmbedUrl.startsWith("https://docs.google.com/presentation/d/10e6u0rpsoBLZJ_enZFFoTBg-zp1Olp88/edit?usp=drive_link&ouid=118006831930588525410&rtpof=true&sd=true")) {
+    if (pptEmbedUrl && pptEmbedUrl.startsWith("https://docs.google.com/presentation/d/e/2PACX-1vR8BKfTMiw5QPxcXAU130vsogKPqThw6QJe402ryGgO_0egLAkg0kZ7L-6DXXWLWQ/pubembed?start=false&loop=false&delayms=5000")) {
         document.getElementById("pptFrame").src = pptEmbedUrl;
     } else {
         document.getElementById("pptFrame").outerHTML = "<p style='color:red;'>URL inválida para o PPTX.</p>";
