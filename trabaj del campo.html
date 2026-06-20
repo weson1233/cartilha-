@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weverson  </title>
+    <style>
+        /* CSS: Estilização e Layout */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a1a;
+            color: white;
+            overflow: hidden; /* Remove barras de rolagem */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide {
+            display: none; /* Esconde todos os slides inicialmente */
+            width: 90%;
+            max-width: 1000px;
+            height: 80vh;
+            background-color: #2d2d2d;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .slide.active {
+            display: flex; /* Mostra apenas o slide ativo */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        h1 { font-size: 3rem; margin-bottom: 20px; color: #4db8ff; }
+        p { font-size: 1.5rem; line-height: 1.6; max-width: 800px; }
+
+        /* Estilo específico para o slide de vídeo */
+        .video-container {
+            width: 100%;
+            height: 60%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        video {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Controles de Navegação */
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            background-color: #4db8ff;
+            border: none;
+            border-radius: 5px;
+            color: #1a1a1a;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        button:hover { background-color: #3399cc; }
+        button:disabled { background-color: #555; cursor: not-allowed; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Slide 1: Título -->
+    <div class="slide active">
+        <h1>Trabalho de campo - unifesp </h1>
+        <p>Weverson candido</p>
+        <p>UC engenharia do transporte / 19/06</p>
+    </div>
+
+    <!-- Slide 2: Introdução -->
+    <div class="slide">
+        <h1>Introdução</h1>
+        <p> o objetivo é descrever o  trajeto diario casa/trabalho até a universidade na cidade de santos.</p>
+	<p>Critérios: tempo gasto no percurso, distancia do trajeto, localição  e locais de referencia. 
+    </div>
+
+    <!-- Slide 3: Vídeo Interativo -->
+    <div class="slide">
+        <h1>Apresentação do Vídeo 1 trajeto de bike  </h1>
+        <div class="video-container">
+            <!-- Substitua 'seu-video.mp4' pelo caminho do seu arquivo de vídeo -->
+            <!-- O atributo controls permite pausar, volume e tela cheia -->
+            <video id="mainVideo" controls>
+	
+                <!--<source src="seu-video.mp4" type="video/mp4">-->
+		<iframe width="560" height="315" src="https://www.youtube.com/embed/TnOeSVQfJcA?si=V2TNe-kIYY1eg2ST" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                Seu navegador não suporta a tag de vídeo.
+            </video>
+        </div>
+        <p>Aqui o percurso de 2.3 km foi realizado de bike, tempo gasto 5 min, saida da rua Uruguai até o campus da carvalho de mendonça.</p>
+    </div>
+
+	
+ <!-- Slide 3: Vídeo Interativo -->
+    <div class="slide">
+        <h1>Apresentação do Vídeo 2 trajeto de motocicleta  </h1>
+        <div class="video-container">
+            <!-- Substitua 'seu-video.mp4' pelo caminho do seu arquivo de vídeo -->
+            <!-- O atributo controls permite pausar, volume e tela cheia -->
+            
+	
+                
+		<iframe width="560" height="315" src="https://www.youtube.com/embed/TnOeSVQfJcA?si=V2TNe-kIYY1eg2ST" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                Seu navegador não suporta a tag de vídeo.
+            </video>
+        </div>
+        <p>Aqui o percurso foi realizado de bike, tempo gasto 5 min.</p>
+    </div>
+
+    <!-- Slide 4: Conclusão -->
+    <div class="slide">
+        <h1>Conclusão</h1>
+        <p>Resumo dos principais pontos discutidos. Obrigado pela atenção!</p>
+    </div>
+
+    <!-- Controles -->
+    <div class="controls">
+        <button id="prevBtn" onclick="changeSlide(-1)">Anterior</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Próximo</button>
+    </div>
+
+    <script>
+        // JS: Lógica de Navegação
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const video = document.getElementById('mainVideo');
+
+        function updateButtons() {
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+        }
+
+        function showSlide(index) {
+            // Garante que o índice não saia dos limites
+            if (index < 0 || index >= slides.length) return;
+
+            // Esconde o slide atual e mostra o novo
+            slides[currentSlide].classList.remove('active');
+            currentSlide = index;
+            slides[currentSlide].classList.add('active');
+
+            // Pausa o vídeo se sair do slide de vídeo
+            if (currentSlide !== 2) { 
+                video.pause();
+            }
+
+            updateButtons();
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Navegação por teclado (Setas Esquerda/Direita)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+        });
+
+        // Inicializa os botões
+        updateButtons();
+    </script>
+</body>
+</html>   
