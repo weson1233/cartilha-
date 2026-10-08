@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTCC - Weverson - Variabilidade Climática em Santos/SP</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #1a3a5c;
+            --secondary: #2e7d32;
+            --accent: #ff6f00;
+            --bg: #f5f7fa;
+            --text: #212121;
+            --card-bg: #ffffff;
+            --border: #e0e0e0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* CAPA */
+        .cover {
+            background: linear-gradient(135deg, var(--primary) 0%, #2c5f8a 100%);
+            color: white;
+            text-align: center;
+            padding: 80px 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 32px rgba(26,58,92,0.3);
+        }
+        .cover h1 { font-size: 2rem; margin-bottom: 10px; }
+        .cover h2 { font-size: 1.3rem; font-weight: 300; margin-bottom: 40px; opacity: 0.9; }
+        .cover .instituição { font-size: 0.95rem; opacity: 0.8; margin-top: 40px; }
+        .cover .autor { font-size: 1.1rem; margin-top: 20px; }
+        .cover .ano { font-size: 1.2rem; margin-top: 10px; font-weight: bold; }
+
+        /* SEÇÕES */
+        .secao {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 35px 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: 1px solid var(--border);
+        }
+
+        .secao h2 {
+            color: var(--primary);
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent);
+            display: inline-block;
+        }
+
+        .secao h3 {
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin: 20px 0 10px;
+        }
+
+        .secao p {
+            text-align: justify;
+            margin-bottom: 15px;
+            text-indent: 2em;
+        }
+
+        .secao p:first-of-type { text-indent: 0; }
+
+        /* TABELA */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+        th, td {
+            padding: 10px 14px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) { background: #f0f4f8; }
+
+        /* GRÁFICOS */
+        .grafico-container {
+            margin: 25px 0;
+            padding: 20px;
+            background: #fafbfc;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        .grafico-container h4 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+        canvas { max-height: 350px; }
+
+        /* DESTAQUES */
+        .destaque {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border-left: 4px solid var(--accent);
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .conclusao-box {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border-left: 4px solid var(--secondary);
+            padding: 20px 25px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* REFERÊNCIAS */
+        .refs { font-size: 0.9rem; }
+        .refs li { margin-bottom: 8px; text-indent: -1.5em; padding-left: 1.5em; }
+
+        /* NAV */
+        .nav-toc {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: 1px solid var(--border);
+        }
+        .nav-toc h2 { color: var(--primary); margin-bottom: 15px; font-size: 1.2rem; }
+        .nav-toc ol { padding-left: 25px; }
+        .nav-toc li { margin-bottom: 6px; }
+        .nav-toc a { color: var(--primary); text-decoration: none; font-weight: 500; }
+        .nav-toc a:hover { color: var(--accent); }
+
+        /* RESPONSIVO */
+        @media (max-width: 600px) {
+            .secao { padding: 25px 20px; }
+            .cover { padding: 50px 20px; }
+            .cover h1 { font-size: 1.4rem; }
+        }
+
+        @media print {
+            body { background: white; }
+            .secao, .nav-toc { box-shadow: none; border: none; }
+            .cover { page-break-after: always; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- CAPA -->
+    <div class="cover">
+        <div class="instituição">UNIVERSIDADE FEDERAL DE SAO PAULO — BI CIÊNCIA E TECNOLOGIA DO MAR / </div>
+        <h1>VARIABILIDADE CLIMÁTICA NA REGIAO DE SANTOS/SP</h1>
+        <h2>Análise das Variáveis Meteorológicas de Temperatura e Precipitação com Base em Dados Climatológicos</h2>
+        <div class="autor">Autor(a): Weverson candido</div>
+        <div class="autor">Orientador(a): William remo pedroso</div>
+        <div class="ano">Santos – SP<br>2026</div>
+    </div>
+
+    <!-- SUMÁRIO -->
+    <div class="nav-toc">
+        <h2>Sumário</h2>
+        <ol>
+            <li><a href="#resumo">Resumo</a></li>
+            <li><a href="#intro">Introdução</a></li>
+            <li><a href="#fund">Fundamentação Teórica</a></li>
+            <li><a href="#metod">Metodologia</a></li>
+            <li><a href="#result">Resultados e Discussão</a></li>
+            <li><a href="#conclusao">Conclusão</a></li>
+            <li><a href="#refs">Referências</a></li>
+        </ol>
+    </div>
+
+    <!-- RESUMO -->
+    <div class="secao" id="resumo">
+        <h2>Resumo</h2>
+        <p>O presente trabalho analisa a variabilidade climática da cidade de Santos/SP, utilizando dados climatológicos de temperatura (mínima e máxima) e precipitação mensal, com base em uma série de 30 anos. O objetivo foi caracterizar os padrões sazonais, identificar a amplitude térmica e a distribuição pluviométrica, bem como discutir as implicações da variabilidade para o planejamento urbano e ambiental. Os resultados evidenciam um regime de clima tropical com estação chuvosa concentrada no verão (dezembro a março) e estação seca no inverno (junho a agosto), com amplitude térmica anual de aproximadamente 9°C entre os extremos mensais. Conclui-se que a variabilidade observada está dentro dos padrões esperados para a região costeira paulista, embora a intensificação de eventos extremos demande monitoramento contínuo.</p>
+        <p><strong>Palavras-chave:</strong> variabilidade climática; Santos/SP; temperatura; precipitação; climatologia.</p>
+    </div>
+
+    <!-- INTRODUÇÃO -->
+    <div class="secao" id="intro">
+        <h2>1. Introdução</h2>
+        <p>A variabilidade climática constitui um dos temas mais relevantes para a compreensão dos processos naturais que afetam diretamente a sociedade. Conforme definição do IPCC (2007), a variabilidade climática refere-se a flutuações no estado médio e em outras estatísticas — como desvio padrão, extremos ou forma da distribuição de frequência — de determinados elementos climáticos em todas as escalas espaciais e temporais.</p>
+        <p>A cidade de Santos/SP, localizada na região costeira do estado de São Paulo (23°55'S, 46°18'W), apresenta características climáticas singulares devido à influência da corrente marítima de Brasil, da topografia litorânea e da proximidade com o oceano Atlântico. O estudo da variabilidade das variáveis meteorológicas locais é fundamental para o planejamento de políticas públicas, gestão de recursos hídricos, agricultura e adaptação às mudanças climáticas.</p>
+        <p>O objetivo geral deste trabalho é analisar a variabilidade climática em Santos/SP a partir de dados climatológicos mensais de temperatura e precipitação. Os objetivos específicos incluem: (i) caracterizar o regime sazonal de temperatura; (ii) analisar a distribuição pluviométrica ao longo do ano; (iii) calcular a amplitude térmica mensal e anual; (iv) discutir as implicações dos padrões identificados.</p>
+    </div>
+
+    <!-- FUNDAMENTAÇÃO TEÓRICA -->
+    <div class="secao" id="fund">
+        <h2>2. Fundamentação Teórica</h2>
+
+        <h3>2.1 Variabilidade Climática</h3>
+        <p>A variabilidade climática pode ser natural (oscilações de El Niño/La Niña, Oscilação Decadal do Pacífico, Oscilação do Atlântico Norte) ou induzida por atividades antrópicas, como a emissão de gases de efeito estufa. Diferencia-se da mudança climática, que implica uma alteração estatisticamente significativa no estado médio do clima (IPCC, 2007).</p>
+
+        <h3>2.2 Clima da Região Costeira do Estado de São Paulo</h3>
+        <p>Segundo a classificação de Köppen, a região costeira de São Paulo apresenta clima tropical (Aw/Am), com verão quente e chuvoso e inverno seco e ameno. A influência marítima atenua as amplitudes térmicas, resultando em valores mais moderados em comparação com o interior do estado. A precipitação é predominantemente de origem convectiva, com maior frequência na estação quente.</p>
+
+        <h3>2.3 Índice de Extremos Climáticos</h3>
+        <p>Para a detecção de mudanças e variabilidade climática, a Organização Meteorológica Mundial (OMM) recomenda o uso de índices padronizados, como o Rx1day (precipitação máxima de um dia), TXx (temperatura máxima de um dia) e a amplitude térmica diária (DTR). Esses índices permitem quantificar tendências em séries temporais longas (ZHANG e YANG, 2004).</p>
+    </div>
+
+    <!-- METODOLOGIA -->
+    <div class="secao" id="metod">
+        <h2>3. Metodologia</h2>
+
+        <h3>3.1 Área de Estudo</h3>
+        <p>Santos/SP situa-se no litoral norte do estado de São Paulo, com altitude média de 8 m e coordenadas 23°55'S, 46°18'W. O município possui 361.647 habitantes (IBGE, 2022) e é o principal porto da região Sudeste.</p>
+
+        <h3>3.2 Dados Utilizados</h3>
+        <p>Foram utilizados dados climatológicos mensais de temperatura mínima, temperatura máxima e precipitação total, com base em uma série de 30 anos de observações, obtidos junto ao portal Climatempo (2026). Os valores representam médias climatológicas calculadas a partir da série histórica.</p>
+
+        <h3>3.3 Análise dos Dados</h3>
+        <p>Os dados foram organizados em tabela e submetidos às seguintes análises:</p>
+        <ul style="margin: 10px 0 10px 30px;">
+            <li>Gráficos de linha para temperatura mínima e máxima mensal;</li>
+            <li>Gráfico de barras para precipitação mensal;</li>
+            <li>Cálculo da amplitude térmica mensal (Tmax − Tmin) e anual;</li>
+            <li>Classificação sazonal (verão: dez–fev; outono: mar–mai; inverno: jun–ago; primavera: set–nov);</li>
+            <li>Comparação com o padrão climatológico esperado para o clima tropical de costa.</li>
+        </ul>
+
+        <h3>3.4 Ferramentas</h3>
+        <p>A visualização dos dados foi realizada utilizando a biblioteca JavaScript Chart.js (v4.4.0), com gráficos renderizados em HTML5 Canvas. O processamento dos dados foi feito em JavaScript puro, sem dependência de servidores.</p>
+    </div>
+
+    <!-- RESULTADOS -->
+    <div class="secao" id="result">
+        <h2>4. Resultados e Discussão</h2>
+
+        <h3>4.1 Dados Climatológicos Mensais</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Mês</th>
+                    <th>Tmin (°C)</th>
+                    <th>Tmax (°C)</th>
+                    <th>Amplitude (°C)</th>
+                    <th>Precip. (mm)</th>
+                </tr>
+            </thead>
+            <tbody id="tabela-dados"></tbody>
+        </table>
+
+        <h3>4.2 Variação de Temperatura</h3>
+        <div class="grafico-container">
+            <h4>Figura 1 — Temperatura Mínima e Máxima Mensal em Santos/SP</h4>
+            <canvas id="grafTemp"></canvas>
+        </div>
+        <p>Observa-se que a temperatura máxima atinge seu pico em fevereiro (27°C) e seu vale em julho e agosto (21°C), enquanto a temperatura mínima varia entre 18°C (jul/ago) e 24°C (jan/fev). A amplitude térmica anual (diferença entre a Tmax do mês mais quente e a Tmin do mês mais frio) é de <strong>9°C</strong>, valor coerente com o efeito moderador da massa de ar marítimo.</p>
+
+        <h3>4.3 Precipitação Mensal</h3>
+        <div class="grafico-container">
+            <h4>Figura 2 — Precipitação Mensal em Santos/SP (mm)</h4>
+            <canvas id="grafPrecip"></canvas>
+        </div>
+        <p>A precipitação apresenta clara sazonalidade, com pico em janeiro (233 mm) e mínimo em junho e agosto (97 mm). O total anual de precipitação é de <strong>1.903 mm</strong>, com 52% da chuva concentrada no verão (dez–fev). O padrão é consistente com o clima tropical com verão chuvoso (Köppen: Aw/Am).</p>
+
+        <h3>4.4 Amplitude Térmica</h3>
+        <div class="grafico-container">
+            <h4>Figura 3 — Amplitude Térmica Mensal (Tmax − Tmin)</h4>
+            <canvas id="grafAmplitude"></canvas>
+        </div>
+        <p>A amplitude térmica mensal varia entre 3°C (janeiro) e 4°C (julho/agosto), indicando baixa variabilidade intramensal, típica de regiões com forte influência marítima. A amplitude média anual é de <strong>3,5°C</strong>.</p>
+
+        <h3>4.5 Análise Sazonal</h3>
+        <div class="grafico-container">
+            <h4>Figura 4 — Média Sazonal de Temperatura e Precipitação</h4>
+            <canvas id="grafSazonal"></canvas>
+        </div>
+        <div class="destaque">
+            <strong>Destaque:</strong> O verão apresenta média de 26,3°C (Tmax) e 206,3 mm de chuva/mês, enquanto o inverno registra 21,3°C (Tmax) e 103,7 mm/mês. A razão verão/inverno de precipitação é de <strong>2:1</strong>, confirmando a marcada sazonalidade pluviométrica.
+        </div>
+    </div>
+
+    <!-- CONCLUSÃO -->
+    <div class="secao" id="conclusao">
+        <h2>5. Conclusão</h2>
+        <div class="conclusao-box">
+            <p>O estudo da variabilidade climática em Santos/SP permitiu confirmar os seguintes pontos:</p>
+            <ol style="margin: 10px 0 10px 25px;">
+                <li>O regime térmico apresenta <strong>baixa amplitude anual (9°C)</strong> e intramensal (3–4°C), reflexo da forte influência marítima e da latitude subtropical.</li>
+                <li>A precipitação é <strong>marcadamente sazonal</strong>, com 52% do total anual concentrado no verão, e total de 1.903 mm/ano, compatível com o clima tropical de costa.</li>
+                <li>A estação seca (jun–ago) registra valores inferiores a 120 mm/mês, o que pode implicar <strong>estresse hídrico</strong> em períodos prolongados de ausência de chuva.</li>
+                <li>Os padrões observados estão <strong>dentro da normalidade climatológica</strong> para a região, porém a monitoramento contínuo é essencial para detectar desvios associados às mudanças climáticas globais.</li>
+                <li>Recomenda-se a incorporação de dados de umidade relativa, ventos e radiação solar em estudos futuros para uma caracterização mais completa da variabilidade.</li>
+            </ol>
+        </div>
+        <p>Como trabalho futuro, sugere-se a análise de séries diárias de longo prazo (≥30 anos) com aplicação de índices de extremos climáticos (RClimDex) e a comparação com projeções de modelos climáticos regionais (CPTEC/INPE) para o período 2041–2070.</p>
+    </div>
+
+    <!-- REFERÊNCIAS -->
+    <div class="secao" id="refs">
+        <h2>Referências</h2>
+        <ul class="refs">
+            <li>CLIMATEMPO. Climatologia de Santos, SP. Disponível em: <a href="https://www.climatempo.com.br/climatologia/540/santos-sp" target="_blank">climatempo.com.br</a>. Acesso em: 8 out. 2026.</li>
+            <li>IPCC. Climate Change 2007: The Physical Science Basis. Contribution of Working Group I to the Fourth Assessment Report. Cambridge: Cambridge University Press, 2007.</li>
+            <li>IBGE. Censo 2022 — Município de Santos. Disponível em: <a href="https://www.ibge.gov.br" target="_blank">ibge.gov.br</a>. Acesso em: 8 out. 2026.</li>
+            <li>ZHANG, X.; YANG, F. The climate extremes index package (Climate-EXtremes Index, CliX) version 1.3. Toronto: Environment and Climate Change Canada, 2004.</li>
+            <li>MCTI. Modelagem Climática e Vulnerabilidades Setoriais à Mudança do Clima no Brasil. Brasília: MCTI, 2016.</li>
+            <li>METEOBLUE. Dados históricos simulados de clima e tempo para Santos. Disponível em: <a href="https://www.meteoblue.com/pt/tempo/historyclimate/climatemodelled/santos_brasil_3449433" target="_blank">meteoblue.com</a>. Acesso em: 8 out. 2026.</li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+// ===== DADOS CLIMATOLÓGICOS DE SANTOS/SP (Média 30 anos - Climatempo) =====
+const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const tMin  = [24, 24, 23, 22, 20, 19, 18, 18, 19, 20, 21, 23];
+const tMax  = [26, 27, 26, 25, 23, 22, 21, 21, 22, 23, 23, 25];
+const precip = [233, 201, 210, 137, 132, 97, 117, 97, 145, 170, 179, 185];
+const amplitude = tMax.map((v, i) => v - tMin[i]);
+
+// Preencher tabela
+const tbody = document.getElementById('tabela-dados');
+meses.forEach((m, i) => {
+    tbody.innerHTML += `<tr><td>${m}</td><td>${tMin[i]}</td><td>${tMax[i]}</td><td>${amplitude[i]}</td><td>${precip[i]}</td></tr>`;
+});
+
+// Cores
+const corPrimaria = '#1a3a5c';
+const corSecundaria = '#2e7d32';
+const corAcento = '#ff6f00';
+
+// ===== GRÁFICO 1: Temperatura =====
+new Chart(document.getElementById('grafTemp'), {
+    type: 'line',
+    data: {
+        labels: meses,
+        datasets: [
+            {
+                label: 'T. Máxima (°C)',
+                data: tMax,
+                borderColor: '#d32f2f',
+                backgroundColor: 'rgba(211,47,47,0.1)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 5,
+                pointBackgroundColor: '#d32f2f'
+            },
+            {
+                label: 'T. Mínima (°C)',
+                data: tMin,
+                borderColor: '#1565c0',
+                backgroundColor: 'rgba(21,101,192,0.1)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 5,
+                pointBackgroundColor: '#1565c0'
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { position: 'top' },
+            tooltip: { mode: 'index', intersect: false }
+        },
+        scales: {
+            y: {
+                title: { display: true, text: 'Temperatura (°C)' },
+                min: 15, max: 30
+            }
+        }
+    }
+});
+
+// ===== GRÁFICO 2: Precipitação =====
+new Chart(document.getElementById('grafPrecip'), {
+    type: 'bar',
+    data: {
+        labels: meses,
+        datasets: [{
+            label: 'Precipitação (mm)',
+            data: precip,
+            backgroundColor: precip.map(v => v >= 150 ? 'rgba(21,101,192,0.7)' : v >= 100 ? 'rgba(21,101,192,0.4)' : 'rgba(21,101,192,0.2)'),
+            borderColor: '#1565c0',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => `${ctx.raw} mm` } }
+        },
+        scales: {
+            y: {
+                title: { display: true, text: 'Precipitação (mm)' },
+                min: 0, max: 260
+            }
+        }
+    }
+});
+
+// ===== GRÁFICO 3: Amplitude Térmica =====
+new Chart(document.getElementById('grafAmplitude'), {
+    type: 'bar',
+    data: {
+        labels: meses,
+        datasets: [{
+            label: 'Amplitude Térmica (°C)',
+            data: amplitude,
+            backgroundColor: 'rgba(255,111,0,0.6)',
+            borderColor: corAcento,
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => `${ctx.raw} °C` } }
+        },
+        scales: {
+            y: {
+                title: { display: true, text: 'Amplitude (°C)' },
+                min: 0, max: 6
+            }
+        }
+    }
+});
+
+// ===== GRÁFICO 4: Análise Sazonal =====
+const mediasSazonais = {
+    label: ['Verão (Dez-Fev)', 'Outono (Mar-Mai)', 'Inverno (Jun-Ago)', 'Primavera (Set-Nov)'],
+    tMax: [
+        (tMax[11] + tMax[0] + tMax[1]) / 3,
+        (tMax[2] + tMax[3] + tMax[4]) / 3,
+        (tMax[5] + tMax[6] + tMax[7]) / 3,
+        (tMax[8] + tMax[9] + tMax[10]) / 3
+    ],
+    tMin: [
+        (tMin[11] + tMin[0] + tMin[1]) / 3,
+        (tMin[2] + tMin[3] + tMin[4]) / 3,
+        (tMin[5] + tMin[6] + tMin[7]) / 3,
+        (tMin[8] + tMin[9] + tMin[10]) / 3
+    ],
+    precip: [
+        (precip[11] + precip[0] + precip[1]) / 3,
+        (precip[2] + precip[3] + precip[4]) / 3,
+        (precip[5] + precip[6] + precip[7]) / 3,
+        (precip[8] + precip[9] + precip[10]) / 3
+    ]
+};
+
+new Chart(document.getElementById('grafSazonal'), {
+    type: 'bar',
+    data: {
+        labels: mediasSazonais.label,
+        datasets: [
+            {
+                label: 'T. Máxima (°C)',
+                data: mediasSazonais.tMax.map(v => v.toFixed(1)),
+                backgroundColor: 'rgba(211,47,47,0.6)',
+                yAxisID: 'y'
+            },
+            {
+                label: 'T. Mínima (°C)',
+                data: mediasSazonais.tMin.map(v => v.toFixed(1)),
+                backgroundColor: 'rgba(21,101,192,0.6)',
+                yAxisID: 'y'
+            },
+            {
+                label: 'Precipitação (mm/mês)',
+                data: mediasSazonais.precip.map(v => v.toFixed(1)),
+                type: 'line',
+                borderColor: corAcento,
+                backgroundColor: 'rgba(255,111,0,0.1)',
+                fill: false,
+                tension: 0.3,
+                pointRadius: 6,
+                pointBackgroundColor: corAcento,
+                yAxisID: 'y1'
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { position: 'top' } },
+        scales: {
+            y: {
+                type: 'linear',
+                position: 'left',
+                title: { display: true, text: 'Temperatura (°C)' },
+                min: 15, max: 30
+            },
+            y1: {
+                type: 'linear',
+                position: 'right',
+                title: { display: true, text: 'Precipitação (mm/mês)' },
+                min: 0, max: 250,
+                grid: { drawOnChartArea: false }
+            }
+        }
+    }
+});
+</script>
+</body>
+</html>   
